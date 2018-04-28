@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tomesetup",
+  "name": "ToMe Setup",
+  "description": "ToMe25(0)'s Setup Mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ToMe25"],
+  "credits": "...",
+  "logoFile": "ToMeSetupLogo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
