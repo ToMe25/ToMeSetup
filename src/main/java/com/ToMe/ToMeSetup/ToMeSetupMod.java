@@ -1,5 +1,8 @@
 package com.ToMe.ToMeSetup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
@@ -9,6 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
@@ -40,14 +44,18 @@ public class ToMeSetupMod {
 	
 	private boolean groundError;
 	private boolean liquidError;
+	private boolean solidError;
 	
 	public static Logger logger;
+	
+	protected List<Integer> dims;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		cfg = new ConfigHandler(e);
 		logger = e.getModLog();
 		MinecraftForge.EVENT_BUS.register(this);
+		dims = new ArrayList<Integer>();
 		//MinecraftForge.TERRAIN_GEN_BUS.register(this);
 	}
 	
@@ -72,14 +80,19 @@ public class ToMeSetupMod {
 	//public void onWorldCreated(DecorateBiomeEvent.Decorate e) {
 	//public void onWorldCreated(DecorateBiomeEvent e) {
 	public void onWorldCreated(EntityJoinWorldEvent e) {
-		if(!setuped) {
-			if(e.getWorld().provider.getDimension() == 0) {
-				setup(e.getWorld());
-				setuped = true;
-			}
+		WorldProvider pro = e.getWorld().provider;
+		if(!dims.contains(pro.getDimension())) {
+			setup(e.getWorld());
+			dims.add(pro.getDimension());
+		}
+		//if(!setuped) {
+			//if(e.getWorld().provider.getDimension() == 0) {
+				//setup(e.getWorld());
+				//setuped = true;
+			//}
 			//setup(e.getWorld());
 			//setuped = true;
-		}
+		//}
 		//System.out.println("Hello World!");
 		//setup(e.getWorld());
 		//e.getWorld().provider.
@@ -158,14 +171,35 @@ public class ToMeSetupMod {
 				w.getGameRules().setOrCreateGameRule("doFireTick", "" + ConfigHandler.doFireTick);
 				w.getGameRules().setOrCreateGameRule("doMobSpawning", "" + ConfigHandler.doMobSpawning);
 				w.getGameRules().setOrCreateGameRule("spawnRadius", "" + ConfigHandler.spawnRadius);
+				w.getGameRules().setOrCreateGameRule("doDaylightCycle", "" + ConfigHandler.doDaylightCycle);
+				w.getGameRules().setOrCreateGameRule("doTileDrops", "" + ConfigHandler.doTileDrops);
+				w.getGameRules().setOrCreateGameRule("doMobLoot", "" + ConfigHandler.doMobLoot);
 				if(ConfigHandler.setWorldspawn == true) {
 					if(ConfigHandler.setBedrock) {
-						BlockPos bedrock = new BlockPos(ConfigHandler.worldSpawnX, 0, ConfigHandler.worldSpawnZ);
+						try {
+							BlockPos bedrock = new BlockPos(ConfigHandler.worldSpawnX, 0, ConfigHandler.worldSpawnZ);
+							if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.groundBlock))) {
+								Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.groundBlock));
+								IBlockState bs = ground.getDefaultState();
+								w.setBlockState(bedrock, bs);
+							}
+							else {
+								if(!groundError) {
+									MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.groundBlock + "!"));
+									groundError = true;
+								}
+								//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.groundBlock + "!"));
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
+						}
+						//BlockPos bedrock = new BlockPos(ConfigHandler.worldSpawnX, 0, ConfigHandler.worldSpawnZ);
 						//IBlockState bs = Blocks.BEDROCK.getDefaultState();
 						//Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.groundBlock));
 						//IBlockState bs = ground.getDefaultState();
 						//w.setBlockState(bedrock, bs);
-						if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.groundBlock))) {
+						/*if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.groundBlock))) {
 							Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.groundBlock));
 							IBlockState bs = ground.getDefaultState();
 							w.setBlockState(bedrock, bs);
@@ -176,18 +210,71 @@ public class ToMeSetupMod {
 								groundError = true;
 							}
 							//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.groundBlock + "!"));
-						}
+						}*/
 					}
 					BlockPos p = new BlockPos(ConfigHandler.worldSpawnX, w.getHeight(), ConfigHandler.worldSpawnZ);
 					p = w.getTopSolidOrLiquidBlock(p);
 					while(!w.isAirBlock(p)) {
 						p = new BlockPos(p.getX(), p.getY() + 1, p.getZ());
 					}
+					boolean liquid = false;
 					w.setSpawnPoint(p);
 					if(ConfigHandler.replaceLiquid) {
-						p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
-						IBlockState blockstate = w.getBlockState(p);
+						try {
+							p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
+							if(p.getY() > 0) {
+								IBlockState blockstate = w.getBlockState(p);
+								if(blockstate.getBlock() instanceof BlockLiquid) {
+									liquid = true;
+									//IBlockState bs = Blocks.GRASS.getDefaultState();
+									//Block replace = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.liquidReplace));
+									//IBlockState bs = replace.getDefaultState();
+									//w.setBlockState(p, bs);
+									if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.liquidReplace))) {
+										Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.liquidReplace));
+										IBlockState bs = ground.getDefaultState();
+										w.setBlockState(p, bs);
+									}
+									else {
+										if(!liquidError) {
+											MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.liquidReplace + "!"));
+											liquidError = true;
+										}
+										//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.liquidReplace + "!"));
+									}
+								}
+							}
+							p = new BlockPos(p.getX(), p.getY() + 1, p.getZ());
+						} catch (Exception e) {
+							// TODO: handle exception
+							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
+						}
+						/*p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
+						if(p.getY() > 0) {
+							IBlockState blockstate = w.getBlockState(p);
+							if(blockstate.getBlock() instanceof BlockLiquid) {
+								liquid = true;
+								//IBlockState bs = Blocks.GRASS.getDefaultState();
+								//Block replace = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.liquidReplace));
+								//IBlockState bs = replace.getDefaultState();
+								//w.setBlockState(p, bs);
+								if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.liquidReplace))) {
+									Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.liquidReplace));
+									IBlockState bs = ground.getDefaultState();
+									w.setBlockState(p, bs);
+								}
+								else {
+									if(!liquidError) {
+										MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.liquidReplace + "!"));
+										liquidError = true;
+									}
+									//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.liquidReplace + "!"));
+								}
+							}
+						}*/
+						/**IBlockState blockstate = w.getBlockState(p);
 						if(blockstate.getBlock() instanceof BlockLiquid) {
+							liquid = true;
 							//IBlockState bs = Blocks.GRASS.getDefaultState();
 							//Block replace = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.liquidReplace));
 							//IBlockState bs = replace.getDefaultState();
@@ -204,7 +291,69 @@ public class ToMeSetupMod {
 								}
 								//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.liquidReplace + "!"));
 							}
+						}*/
+					}
+					if(ConfigHandler.replaceSolid) {
+						try {
+							p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
+							if(p.getY() > 0) {
+								IBlockState blockstate = w.getBlockState(p);
+								if(!liquid) {
+									if(!(blockstate.getBlock() instanceof BlockLiquid)) {
+										if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.solidReplace))) {
+											Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.solidReplace));
+											IBlockState bs = ground.getDefaultState();
+											w.setBlockState(p, bs);
+										}
+										else {
+											if(!solidError) {
+												MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.solidReplace + "!"));
+												solidError = true;
+											}
+										}
+									}
+								}
+							}
+							p = new BlockPos(p.getX(), p.getY() + 1, p.getZ());
+						} catch (Exception e) {
+							// TODO: handle exception
+							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
 						}
+						/*p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
+						if(p.getY() > 0) {
+							IBlockState blockstate = w.getBlockState(p);
+							if(!liquid) {
+								if(!(blockstate.getBlock() instanceof BlockLiquid)) {
+									if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.solidReplace))) {
+										Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.solidReplace));
+										IBlockState bs = ground.getDefaultState();
+										w.setBlockState(p, bs);
+									}
+									else {
+										if(!solidError) {
+											MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.solidReplace + "!"));
+											solidError = true;
+										}
+									}
+								}
+							}
+						}*/
+						/**IBlockState blockstate = w.getBlockState(p);
+						if(!liquid) {
+							if(!(blockstate.getBlock() instanceof BlockLiquid)) {
+								if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.solidReplace))) {
+									Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.solidReplace));
+									IBlockState bs = ground.getDefaultState();
+									w.setBlockState(p, bs);
+								}
+								else {
+									if(!solidError) {
+										MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.solidReplace + "!"));
+										solidError = true;
+									}
+								}
+							}
+						}*/
 					}
 				}
 			}
