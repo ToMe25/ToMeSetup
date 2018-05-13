@@ -28,6 +28,18 @@ public class ConfigHandler {
 	public static String groundBlock;
 	public static String liquidReplace;
 	public static String solidReplace;
+	public static boolean groundEnableOreDict;
+	public static boolean liquidEnableOreDict;
+	public static boolean solidEnableOreDict;
+	public static int groundMeta;
+	public static int liquidMeta;
+	public static int solidMeta;
+	public static String groundOreDict;
+	public static String liquidOreDict;
+	public static String solidOreDict;
+	public static int groundNumber;
+	public static int liquidNumber;
+	public static int solidNumber;
 	
 	public ConfigHandler(FMLPreInitializationEvent e) {
 		config = new Configuration(new File(e.getModConfigurationDirectory(), "ToMeSetup.cfg"));
@@ -64,13 +76,32 @@ public class ConfigHandler {
 		worldSpawnX = cfg.getInt("worldSpawnX", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The X psoition of the Worldspawn.");
 		worldSpawnZ = cfg.getInt("worldSpawnZ", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The Z psoition of the Worldspawn.");
 		//setBedrock = cfg.getBoolean("setBedrock", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with Bedrock.");
-		setBedrock = cfg.getBoolean("setGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by groundBlock.");
+		//setBedrock = cfg.getBoolean("setGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by groundBlock.");
+		setBedrock = cfg.getBoolean("replaceGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by ground2Replace.");
 		//replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with Grass if it is a Liquid Block.");
-		replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with the Block defined by liquidReplace if it is a Liquid Block.");
-		replaceSolid = cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with the Block defined by solidReplace if it is not a Liquid Block.");
-		groundBlock = cfg.getString("groundBlock", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 with this Block.");
-		liquidReplace = cfg.getString("liquidReplace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to set by replaceLiquid.");
-		solidReplace = cfg.getString("solidReplace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to set by replaceSolid.");
+		//replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with the Block defined by liquidReplace if it is a Liquid Block.");
+		replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by liquid2Replace if it is a Liquid Block.");
+		//replaceSolid = cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with the Block defined by solidReplace if it is not a Liquid Block.");
+		replaceSolid = cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by solid2Replace if it is not a Liquid Block.");
+		//groundBlock = cfg.getString("groundBlock", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 with this Block.");
+		//liquidReplace = cfg.getString("liquidReplace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to set by replaceLiquid.");
+		//solidReplace = cfg.getString("solidReplace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to set by replaceSolid.");
+		groundEnableOreDict = cfg.getBoolean("ground1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Dissable to Use the Registry Name.");
+		liquidEnableOreDict = cfg.getBoolean("liquid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a Liquid Block. Dissable to Use the Registry Name.");
+		solidEnableOreDict = cfg.getBoolean("solid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a not Liquid Block. Dissable to Use the Registry Name.");
+		groundBlock = cfg.getString("ground2Replace", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is dissabled.");
+		liquidReplace = cfg.getString("liquid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is dissabled.");
+		solidReplace = cfg.getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is a Liquid Block and solid1EnableOreDict is dissabled.");
+		groundOreDict = cfg.getString("ground3OreDict", CATEGORY_WORLDSPAWN, "bedrock", "The OreDictinary Name with the Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is enabled.");
+		liquidOreDict = cfg.getString("liquid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is enabled.");
+		solidOreDict = cfg.getString("solid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is enabled.");
+		groundMeta = cfg.getInt("ground4Meta", CATEGORY_WORLDSPAWN, -1, -1, 255, "The Meatdata for the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Use -1 for the Default Metadata.");
+		liquidMeta = cfg.getInt("liquid4Meta", CATEGORY_WORLDSPAWN, -1, -1, 255, "The Meatdata for the Block to set direct under the Worldspawn if it is a Liquid Block. Use -1 for the Default Metadata.");
+		solidMeta = cfg.getInt("solid4Meta", CATEGORY_WORLDSPAWN, -1, -1, 255, "The Meatdata for the Block to set direct under the Worldspawn if it is not a Liquid Block. Use -1 for the Default Metadata.");
+		groundNumber = cfg.getInt("ground5Number", CATEGORY_WORLDSPAWN, 0, 0, Integer.MAX_VALUE, "The Number of Blocks registered before the Block to use for replaceGround.");
+		liquidNumber = cfg.getInt("liquid5Number", CATEGORY_WORLDSPAWN, 0, 0, Integer.MAX_VALUE, "The Number of Blocks registered before the Block to use for replaceLiquid.");
+		solidNumber = cfg.getInt("solid5Number", CATEGORY_WORLDSPAWN, 0, 0, Integer.MAX_VALUE, "The Number of Blocks registered before the Block to use. for replaceSolid");
+		
 		//System.out.println("Config Created!");
 	}
 	
