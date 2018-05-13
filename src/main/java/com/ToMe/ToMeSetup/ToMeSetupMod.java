@@ -6,9 +6,14 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,8 +33,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+//import net.minecraftforge.fml.relauncher.Side;
+//import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.command.server.CommandSetBlock;
 
 //@EventBusSubscriber
 @Mod(modid="tomesetup",name="ToMe Setup", version="1.0")
@@ -56,6 +63,7 @@ public class ToMeSetupMod {
 		logger = e.getModLog();
 		MinecraftForge.EVENT_BUS.register(this);
 		dims = new ArrayList<Integer>();
+		OreDictionary.registerOre("bedrock", Blocks.BEDROCK);
 		//MinecraftForge.TERRAIN_GEN_BUS.register(this);
 	}
 	
@@ -176,7 +184,76 @@ public class ToMeSetupMod {
 				w.getGameRules().setOrCreateGameRule("doMobLoot", "" + ConfigHandler.doMobLoot);
 				if(ConfigHandler.setWorldspawn == true) {
 					if(ConfigHandler.setBedrock) {
-						try {
+						groundError = placeBlock(w, ConfigHandler.groundBlock, ConfigHandler.groundOreDict, ConfigHandler.groundEnableOreDict, ConfigHandler.groundMeta, ConfigHandler.groundNumber, 0, groundError);
+						/**try {
+							BlockPos ground = new BlockPos(ConfigHandler.worldSpawnX, 0, ConfigHandler.worldSpawnZ);
+							if(ConfigHandler.groundEnableOreDict) {
+								List<ItemStack> oreDict = OreDictionary.getOres(ConfigHandler.groundOreDict);
+								if(!oreDict.isEmpty()) {
+									IBlockState bs;
+									Block ore;
+									int defaultMeta;
+									if(ConfigHandler.groundNumber < oreDict.size()) {
+										ItemBlock ib = (ItemBlock)oreDict.get(ConfigHandler.groundNumber).getItem();
+										ore = ib.block;
+										//bs = oreDict.get(ConfigHandler.groundNumber).state;
+										defaultMeta = oreDict.get(ConfigHandler.groundNumber).getItemDamage();
+									}
+									else {
+										ItemBlock ib = (ItemBlock)oreDict.get(oreDict.size() - 1).getItem();
+										ore = ib.block;
+										defaultMeta = oreDict.get(oreDict.size() - 1).getItemDamage();
+									}
+									if(ConfigHandler.groundMeta >= 0) {
+										bs = ore.getStateFromMeta(ConfigHandler.groundMeta);
+									}
+									else {
+										if(defaultMeta != OreDictionary.WILDCARD_VALUE) {
+											bs = ore.getStateFromMeta(defaultMeta);
+										}
+										else {
+											bs = ore.getDefaultState();
+										}
+										//bs = ore.getDefaultState();
+									}
+									w.setBlockState(ground, bs);
+								}
+								else {
+									if(!groundError) {
+										MinecraftForge.EVENT_BUS.register(new Messager("Could not Find any Item in the OreDictionary Named " + ConfigHandler.groundOreDict + "!"));
+										groundError = true;
+									}
+								}
+							}
+							else {
+								if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.groundBlock))) {
+									Block groundBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.groundBlock));
+									IBlockState bs;
+									if(ConfigHandler.groundMeta >= 0) {
+										bs = groundBlock.getStateFromMeta(ConfigHandler.groundMeta);
+										//bs = groundBlock.Pro
+									}
+									else {
+										bs = groundBlock.getDefaultState();
+									}
+									//IBlockState bs = groundBlock.getDefaultState();
+									//bs.withProperty(BlockHorizontal.FACING, ConfigHandler.groundMeta);
+									w.setBlockState(ground, bs);
+								}
+								else {
+									if(!groundError) {
+										MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + ConfigHandler.groundBlock + "!"));
+										groundError = true;
+									}
+								}
+								//throw new NullPointerException("This is a Test Error");
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
+							logger.catching(e);
+						}*/
+						/**try {
 							BlockPos bedrock = new BlockPos(ConfigHandler.worldSpawnX, 0, ConfigHandler.worldSpawnZ);
 							if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(ConfigHandler.groundBlock))) {
 								Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.groundBlock));
@@ -193,7 +270,7 @@ public class ToMeSetupMod {
 						} catch (Exception e) {
 							// TODO: handle exception
 							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
-						}
+						}*/
 						//BlockPos bedrock = new BlockPos(ConfigHandler.worldSpawnX, 0, ConfigHandler.worldSpawnZ);
 						//IBlockState bs = Blocks.BEDROCK.getDefaultState();
 						//Block ground = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ConfigHandler.groundBlock));
@@ -220,7 +297,17 @@ public class ToMeSetupMod {
 					boolean liquid = false;
 					w.setSpawnPoint(p);
 					if(ConfigHandler.replaceLiquid) {
-						try {
+						p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
+						if(p.getY() > 0) {
+							IBlockState blockstate = w.getBlockState(p);
+							if(blockstate.getBlock() instanceof BlockLiquid) {
+								liquid = true;
+								liquidError = placeBlock(w, ConfigHandler.liquidReplace, ConfigHandler.liquidOreDict, ConfigHandler.liquidEnableOreDict, ConfigHandler.liquidMeta, ConfigHandler.liquidNumber, p.getY(), liquidError);
+							}
+							
+						}
+						p = new BlockPos(p.getX(), p.getY() + 1, p.getZ());
+						/**try {
 							p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
 							if(p.getY() > 0) {
 								IBlockState blockstate = w.getBlockState(p);
@@ -248,7 +335,7 @@ public class ToMeSetupMod {
 						} catch (Exception e) {
 							// TODO: handle exception
 							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
-						}
+						}*/
 						/*p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
 						if(p.getY() > 0) {
 							IBlockState blockstate = w.getBlockState(p);
@@ -294,7 +381,16 @@ public class ToMeSetupMod {
 						}*/
 					}
 					if(ConfigHandler.replaceSolid) {
-						try {
+						p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
+						if(p.getY() > 0) {
+							IBlockState blockstate = w.getBlockState(p);
+							if(!(blockstate.getBlock() instanceof BlockLiquid) && !liquid) {
+									solidError = placeBlock(w, ConfigHandler.solidReplace, ConfigHandler.solidOreDict, ConfigHandler.solidEnableOreDict, ConfigHandler.solidMeta, ConfigHandler.solidNumber, p.getY(), solidError);
+							}
+							
+						}
+						p = new BlockPos(p.getX(), p.getY() + 1, p.getZ());
+						/**try {
 							p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
 							if(p.getY() > 0) {
 								IBlockState blockstate = w.getBlockState(p);
@@ -318,7 +414,7 @@ public class ToMeSetupMod {
 						} catch (Exception e) {
 							// TODO: handle exception
 							MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
-						}
+						}*/
 						/*p = new BlockPos(p.getX(), p.getY() - 1, p.getZ());
 						if(p.getY() > 0) {
 							IBlockState blockstate = w.getBlockState(p);
@@ -358,6 +454,74 @@ public class ToMeSetupMod {
 				}
 			}
 		}
+	}
+	
+	public boolean placeBlock(World w, String registryName, String oreDictName, boolean useOreDict, int meta, int oreDictNumber, int height, boolean errored) {
+		//boolean ret = false;
+		boolean ret = errored;
+		try {
+			BlockPos place = new BlockPos(ConfigHandler.worldSpawnX, height, ConfigHandler.worldSpawnZ);
+			if(useOreDict) {
+				List<ItemStack> oreDict = OreDictionary.getOres(oreDictName);
+				if(!oreDict.isEmpty()) {
+					IBlockState bs;
+					Block ore;
+					int defaultMeta;
+					if(oreDictNumber < oreDict.size()) {
+						ItemBlock ib = (ItemBlock)oreDict.get(oreDictNumber).getItem();
+						ore = ib.block;
+						defaultMeta = oreDict.get(oreDictNumber).getItemDamage();
+					}
+					else {
+						ItemBlock ib = (ItemBlock)oreDict.get(oreDict.size() - 1).getItem();
+						ore = ib.block;
+						defaultMeta = oreDict.get(oreDict.size() - 1).getItemDamage();
+					}
+					if(meta >= 0) {
+						bs = ore.getStateFromMeta(meta);
+					}
+					else {
+						if(defaultMeta != OreDictionary.WILDCARD_VALUE) {
+							bs = ore.getStateFromMeta(defaultMeta);
+						}
+						else {
+							bs = ore.getDefaultState();
+						}
+					}
+					w.setBlockState(place, bs);
+				}
+				else {
+					if(!errored) {
+						MinecraftForge.EVENT_BUS.register(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
+						ret = true;
+					}
+				}
+			}
+			else {
+				if(ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(registryName))) {
+					Block groundBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(registryName));
+					IBlockState bs;
+					if(meta >= 0) {
+						bs = groundBlock.getStateFromMeta(meta);
+					}
+					else {
+						bs = groundBlock.getDefaultState();
+					}
+					w.setBlockState(place, bs);
+				}
+				else {
+					if(!errored) {
+						MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + registryName + "!"));
+						ret = true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
+			logger.catching(e);
+		}
+		return ret;
 	}
 	
 }
