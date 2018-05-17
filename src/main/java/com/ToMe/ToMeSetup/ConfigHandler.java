@@ -40,6 +40,21 @@ public class ConfigHandler {
 	public static int groundNumber;
 	public static int liquidNumber;
 	public static int solidNumber;
+	public static final String CATEGORY_SPAWN_ITEMS = "start_items";
+	public static boolean enableStartItems;
+	public static boolean startItemsOnRespawn;
+	public static String[] StartItems = {"minecraft:log"};
+	public static String[] StartItemMeta = {"-1"};
+	public static int[] StartItemMetas;
+	public static String[] StartItemCount = {"32"};
+	public static int[] StartItemCounts;
+	public static String[] StartItemOreDicts = {"treeSapling"};
+	public static String[] StartItemOreDictNumber = {"0"};
+	public static int[] StartItemOreDictNumbers;
+	public static String[] StartItemOreDictMeta = {"-1"};
+	public static int[] StartItemOreDictMetas;
+	public static String[] StartItemOreDictCount = {"16"};
+	public static int[] StartItemOreDictCounts;
 	
 	public ConfigHandler(FMLPreInitializationEvent e) {
 		config = new Configuration(new File(e.getModConfigurationDirectory(), "ToMeSetup.cfg"));
@@ -102,7 +117,78 @@ public class ConfigHandler {
 		liquidNumber = cfg.getInt("liquid5Number", CATEGORY_WORLDSPAWN, 0, 0, Integer.MAX_VALUE, "The Number of Blocks registered before the Block to use for replaceLiquid.");
 		solidNumber = cfg.getInt("solid5Number", CATEGORY_WORLDSPAWN, 0, 0, Integer.MAX_VALUE, "The Number of Blocks registered before the Block to use. for replaceSolid");
 		
+		//SPAWN ITEMS
+		cfg.addCustomCategoryComment(CATEGORY_SPAWN_ITEMS, "Wich Start Items Players should get.");
+		enableStartItems = cfg.getBoolean("enableStartItems", CATEGORY_SPAWN_ITEMS, true, "Enables/Dissables this Category.");
+		startItemsOnRespawn = cfg.getBoolean("RespawnStartItems", CATEGORY_SPAWN_ITEMS, false, "Should the Playerget the Items everytime after respawning?");
+		StartItems = cfg.getStringList("Start1Items", CATEGORY_SPAWN_ITEMS, StartItems, "Determine Wich Start Items all Players should get.");
+		StartItemMeta = cfg.getStringList("Start2Metas", CATEGORY_SPAWN_ITEMS, StartItemMeta, "The Item Meta for the direct defined Items. Write in the same sequence like the Start1Items.");
+		StartItemCount = cfg.getStringList("Start3Count", CATEGORY_SPAWN_ITEMS, StartItemCount, "How many from this Items should the Player get? Write in the same sequence like the Start1Items.");
+		StartItemOreDicts = cfg.getStringList("Start4OreDicts", CATEGORY_SPAWN_ITEMS, StartItemOreDicts, "Determine Wich Start Items all Players should get. Use OreDictionary.");
+		StartItemOreDictNumber = cfg.getStringList("Start5OreNumbers", CATEGORY_SPAWN_ITEMS, StartItemOreDictNumber, "How many Items are before this Item in the same OreDictionary Name? Write in the same sequence like the Start4OreDicts.");
+		StartItemOreDictMeta = cfg.getStringList("Start6OreMetas", CATEGORY_SPAWN_ITEMS, StartItemOreDictMeta, "The Item Meta for the Items defined via OreDict. Write in the same sequence like the Start4OreDicts.");
+		StartItemOreDictCount = cfg.getStringList("Start7OreCount", CATEGORY_SPAWN_ITEMS, StartItemOreDictCount, "How many from this Items should the Player get? Write in the same sequence like the Start4OreDicts.");
 		//System.out.println("Config Created!");
+		
+		StartItemMetas = new int[StartItemMeta.length];
+		int i = 0;
+		for(String s:StartItemMeta) {
+			try {
+				StartItemMetas[i] = Integer.parseInt(s);
+				i++;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		
+		StartItemCounts = new int[StartItemCount.length];
+		i = 0;
+		for(String s:StartItemCount) {
+			try {
+				StartItemCounts[i] = Integer.parseInt(s);
+				i++;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		
+		StartItemOreDictNumbers = new int[StartItemOreDictNumber.length];
+		i = 0;
+		for(String s:StartItemOreDictNumber) {
+			try {
+				StartItemOreDictNumbers[i] = Integer.parseInt(s);
+				i++;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		
+		StartItemOreDictMetas = new int[StartItemOreDictMeta.length];
+		i = 0;
+		for(String s:StartItemOreDictMeta) {
+			try {
+				StartItemOreDictMetas[i] = Integer.parseInt(s);
+				i++;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		
+		StartItemOreDictCounts = new int[StartItemOreDictCount.length];
+		i = 0;
+		for(String s:StartItemOreDictCount) {
+			try {
+				StartItemOreDictCounts[i] = Integer.parseInt(s);
+				i++;
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }
