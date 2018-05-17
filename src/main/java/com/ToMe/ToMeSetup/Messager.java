@@ -34,6 +34,19 @@ public class Messager {
 		ToMeSetupMod.logger.error(Message);
 	}
 	
+	/**
+	 * Sends a Message to the Next Joining Players, the Player player and the Server Console.
+	 * @param Message The Message to send to The Next Joining Players and the Server Console.
+	 * @param Players how many Players will get The Message.
+	 * @param player an additional player to send the Message.
+	 */
+	public Messager(String Message, int Players, EntityPlayer player) {
+		this.Message = Message;
+		player.addChatMessage(Serializer.jsonToComponent("{\"text\":\"§cToMeSetup: §4" + Message + "\"}"));
+		this.Players = Players;
+		ToMeSetupMod.logger.error(Message);
+	}
+	
 	@SubscribeEvent
 	public void onPlayerJoins(EntityJoinWorldEvent e) {
 		if(Players > 0) {
