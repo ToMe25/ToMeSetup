@@ -47,6 +47,8 @@ public class ToMeSetupMod {
 	
 	public static ConfigHandler cfg;
 	
+	public static StartItemProvider SIP;
+	
 	protected boolean setuped = false;
 	
 	private boolean groundError;
@@ -60,8 +62,10 @@ public class ToMeSetupMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		cfg = new ConfigHandler(e);
+		SIP = new StartItemProvider();
 		logger = e.getModLog();
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(SIP);
 		dims = new ArrayList<Integer>();
 		OreDictionary.registerOre("bedrock", Blocks.BEDROCK);
 		//MinecraftForge.TERRAIN_GEN_BUS.register(this);
@@ -75,6 +79,10 @@ public class ToMeSetupMod {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		
+	}
+	
+	public static void registerMessager(Messager m) {
+		MinecraftForge.EVENT_BUS.register(m);
 	}
 	
 	@SubscribeEvent
@@ -469,12 +477,14 @@ public class ToMeSetupMod {
 					int defaultMeta;
 					if(oreDictNumber < oreDict.size()) {
 						ItemBlock ib = (ItemBlock)oreDict.get(oreDictNumber).getItem();
-						ore = ib.block;
+						//ore = ib.block;
+						ore = ib.getBlock();
 						defaultMeta = oreDict.get(oreDictNumber).getItemDamage();
 					}
 					else {
 						ItemBlock ib = (ItemBlock)oreDict.get(oreDict.size() - 1).getItem();
-						ore = ib.block;
+						//ore = ib.block;
+						ore = ib.getBlock();
 						defaultMeta = oreDict.get(oreDict.size() - 1).getItemDamage();
 					}
 					if(meta >= 0) {
@@ -492,7 +502,8 @@ public class ToMeSetupMod {
 				}
 				else {
 					if(!errored) {
-						MinecraftForge.EVENT_BUS.register(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
+						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
+						registerMessager(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
 						ret = true;
 					}
 				}
@@ -511,14 +522,16 @@ public class ToMeSetupMod {
 				}
 				else {
 					if(!errored) {
-						MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + registryName + "!"));
+						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + registryName + "!"));
+						registerMessager(new Messager("Could not Find Block Named " + registryName + "!"));
 						ret = true;
 					}
 				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
+			//MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
+			registerMessager(new Messager("An Unknown Error occures while Replacing a Block!"));
 			logger.catching(e);
 		}
 		return ret;
