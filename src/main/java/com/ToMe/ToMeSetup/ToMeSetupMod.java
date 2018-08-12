@@ -2,6 +2,7 @@ package com.ToMe.ToMeSetup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +13,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -39,11 +41,17 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraft.command.server.CommandSetBlock;
 
 //@EventBusSubscriber
-@Mod(modid="tomesetup",name="ToMe Setup", version="1.0")
+//@Mod(modid="tomesetup",name="ToMe Setup", version="1.0")
+@Mod(modid = ToMeSetupMod.MODID, name = ToMeSetupMod.NAME, version = ToMeSetupMod.VERSION, acceptedMinecraftVersions = ToMeSetupMod.MCVERSION)
 public class ToMeSetupMod {
 	
 	@Instance
 	public static ToMeSetupMod Instance;
+	
+	public static final String MODID = "tomesetup";
+	public static final String NAME = "ToMe Setup";
+	public static final String VERSION = "1.0";
+	public static final String MCVERSION = "[1.12,1.12.2]";
 	
 	public static ConfigHandler cfg;
 	
@@ -61,9 +69,10 @@ public class ToMeSetupMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		logger = e.getModLog();
 		cfg = new ConfigHandler(e);
 		SIP = new StartItemProvider();
-		logger = e.getModLog();
+		//logger = e.getModLog();
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(SIP);
 		dims = new ArrayList<Integer>();
@@ -73,17 +82,19 @@ public class ToMeSetupMod {
 	
 	@EventHandler
 	public void Init(FMLInitializationEvent e) {
-		
+		Messager.initLangMap();
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		
+		if(ConfigHandler.enableStartItems) {
+			StartItemProvider.validateStartItemConfig();
+		}
 	}
 	
-	public static void registerMessager(Messager m) {
+	/*public static void registerMessager(Messager m) {
 		MinecraftForge.EVENT_BUS.register(m);
-	}
+	}*/
 	
 	@SubscribeEvent
 	//@EventHandler
@@ -180,6 +191,7 @@ public class ToMeSetupMod {
 	}
 	
 	public void setup(World w) {
+		//Messager.sendMissingBlock("Test", 4);//A Test!
 		if(!w.isRemote) {
 			if(!w.isRemote) {
 				w.getGameRules().setOrCreateGameRule("keepInventory", "" + ConfigHandler.keepInventory);
@@ -467,25 +479,66 @@ public class ToMeSetupMod {
 	public boolean placeBlock(World w, String registryName, String oreDictName, boolean useOreDict, int meta, int oreDictNumber, int height, boolean errored) {
 		//boolean ret = false;
 		boolean ret = errored;
+		//oreDictNumber --;
 		try {
+			//throw new NullPointerException("Test Exception!!!");//TEST(Crashes with Unresolved compilation problem)
+			//if(true) {
+				//throw new NullPointerException("Test Exception!!!");//Test
+			//}
 			BlockPos place = new BlockPos(ConfigHandler.worldSpawnX, height, ConfigHandler.worldSpawnZ);
 			if(useOreDict) {
 				List<ItemStack> oreDict = OreDictionary.getOres(oreDictName);
 				if(!oreDict.isEmpty()) {
 					IBlockState bs;
-					Block ore;
-					int defaultMeta;
+					//Block ore;
+					//Block ore = null;
+					Block ore = Blocks.AIR;
+					//int defaultMeta;
+					int defaultMeta = 0;
 					if(oreDictNumber < oreDict.size()) {
-						ItemBlock ib = (ItemBlock)oreDict.get(oreDictNumber).getItem();
+						//ItemBlock ib = (ItemBlock)oreDict.get(oreDictNumber).getItem();
+						Item it = oreDict.get(oreDictNumber).getItem();
+						if(it instanceof ItemBlock) {
+							ItemBlock ib = (ItemBlock)it;
+							ore = ib.getBlock();
+							defaultMeta = oreDict.get(oreDictNumber).getItemDamage();
+						}
+						else {
+							if(!errored) {
+								//Messager.sendBlockOreDictItem(oreDictName);
+								//Messager.sendBlockOreDictItem("" + oreDictNumber);
+								//Messager.sendBlockOreDictItem(oreDictName + oreDictNumber);
+								Messager.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+								ret = true;
+							}
+						}
 						//ore = ib.block;
-						ore = ib.getBlock();
-						defaultMeta = oreDict.get(oreDictNumber).getItemDamage();
+						//ore = ib.getBlock();
+						//defaultMeta = oreDict.get(oreDictNumber).getItemDamage();
 					}
 					else {
-						ItemBlock ib = (ItemBlock)oreDict.get(oreDict.size() - 1).getItem();
+						logger.info("oreDict Number too high!");
+						oreDictNumber = oreDict.size() - 1;
+						Item it = oreDict.get(oreDictNumber).getItem();
+						if(it instanceof ItemBlock) {
+							ItemBlock ib = (ItemBlock)it;
+							ore = ib.getBlock();
+							defaultMeta = oreDict.get(oreDictNumber).getItemDamage();
+						}
+						else {
+							if(!errored) {
+								//Messager.sendBlockOreDictItem(oreDictName);
+								//Messager.sendBlockOreDictItem("" + oreDictNumber);
+								//Messager.sendBlockOreDictItem(oreDictName + oreDictNumber);
+								Messager.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+								ret = true;
+							}
+						}
+						//oreDictNumber = 1;
+						//ItemBlock ib = (ItemBlock)oreDict.get(oreDict.size() - 1).getItem();
 						//ore = ib.block;
-						ore = ib.getBlock();
-						defaultMeta = oreDict.get(oreDict.size() - 1).getItemDamage();
+						//ore = ib.getBlock();
+						//defaultMeta = oreDict.get(oreDict.size() - 1).getItemDamage();
 					}
 					if(meta >= 0) {
 						bs = ore.getStateFromMeta(meta);
@@ -498,13 +551,18 @@ public class ToMeSetupMod {
 							bs = ore.getDefaultState();
 						}
 					}
-					w.setBlockState(place, bs);
+					//w.setBlockState(place, bs);
+					if(!ret) {
+						w.setBlockState(place, bs);
+					}
 				}
 				else {
 					if(!errored) {
 						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
-						registerMessager(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
-						ret = true;
+						//registerMessager(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
+						//TODO Rebuild after a Test!
+						Messager.sendMissingBlockOreDict(oreDictName);
+						//ret = true;
 					}
 				}
 			}
@@ -518,12 +576,16 @@ public class ToMeSetupMod {
 					else {
 						bs = groundBlock.getDefaultState();
 					}
-					w.setBlockState(place, bs);
+					//w.setBlockState(place, bs);
+					if(!ret) {
+						w.setBlockState(place, bs);
+					}
 				}
 				else {
 					if(!errored) {
 						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + registryName + "!"));
-						registerMessager(new Messager("Could not Find Block Named " + registryName + "!"));
+						//registerMessager(new Messager("Could not Find Block Named " + registryName + "!"));
+						Messager.sendMissingBlock(registryName);
 						ret = true;
 					}
 				}
@@ -531,7 +593,9 @@ public class ToMeSetupMod {
 		} catch (Exception e) {
 			// TODO: handle exception
 			//MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
-			registerMessager(new Messager("An Unknown Error occures while Replacing a Block!"));
+			//registerMessager(new Messager("An Unknown Error occures while Replacing a Block!"));
+			//Messager.sendMessage("An Unknown Error occures while Replacing a Block!");
+			Messager.sendMessage("An Unknown Error occures while Replacing a Block!", 5, null, "Maybe its a Bug?");
 			logger.catching(e);
 		}
 		return ret;
