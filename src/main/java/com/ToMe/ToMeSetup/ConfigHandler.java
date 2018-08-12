@@ -9,6 +9,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class ConfigHandler {
 	
 	public Configuration config;
+	//GENERAL
+	public static boolean enableTooltips;
+	//GAMERULES
 	public static final String CATEGORY_GAMERULES = "gamerules";
 	public static boolean keepInventory;
 	public static boolean mobGriefing;
@@ -18,6 +21,7 @@ public class ConfigHandler {
 	public static boolean doDaylightCycle;
 	public static boolean doTileDrops;
 	public static boolean doMobLoot;
+	//WORLDSPAWN
 	public static final String CATEGORY_WORLDSPAWN = "worldspawn";
 	public static boolean setWorldspawn;
 	public static int worldSpawnX;
@@ -40,6 +44,7 @@ public class ConfigHandler {
 	public static int groundNumber;
 	public static int liquidNumber;
 	public static int solidNumber;
+	//SPAWN ITEMS
 	public static final String CATEGORY_SPAWN_ITEMS = "start_items";
 	public static boolean enableStartItems;
 	public static boolean startItemsOnRespawn;
@@ -74,6 +79,11 @@ public class ConfigHandler {
 	public static void InitConfig(Configuration cfg) {
 		//ConfigCategory gamerules = new ConfigCategory("gamerules");
 		//cfg.addCustomCategoryComment("gamerules", "Test");
+		
+		//GENERAL
+		cfg.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "The General Configs.");
+		enableTooltips = cfg.getBoolean("enableErrorTooltips", Configuration.CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
+		
 		//GAMERULES
 		cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
 		keepInventory = cfg.getBoolean("keepInventory", CATEGORY_GAMERULES, true, "The gamerule keepInventory determines whether the Pleyer keeps his Items on death in Inventory. To set this manually do \"/gamerule keepInventory true\"!");
@@ -134,11 +144,15 @@ public class ConfigHandler {
 		int i = 0;
 		for(String s:StartItemMeta) {
 			try {
+				//i++;
 				StartItemMetas[i] = Integer.parseInt(s);
 				i++;
 			} catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				//e.printStackTrace();
+				StartItemMetas[i] = 0;
+				i++;
+				ToMeSetupMod.logger.catching(e);
 			}
 		}
 		
@@ -146,11 +160,15 @@ public class ConfigHandler {
 		i = 0;
 		for(String s:StartItemCount) {
 			try {
+				//i++;
 				StartItemCounts[i] = Integer.parseInt(s);
 				i++;
 			} catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				//e.printStackTrace();
+				StartItemCounts[i] = 0;
+				i++;
+				ToMeSetupMod.logger.catching(e);
 			}
 		}
 		
@@ -158,11 +176,15 @@ public class ConfigHandler {
 		i = 0;
 		for(String s:StartItemOreDictNumber) {
 			try {
+				//i++;
 				StartItemOreDictNumbers[i] = Integer.parseInt(s);
 				i++;
 			} catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				//e.printStackTrace();
+				StartItemOreDictNumbers[i] = 0;
+				i++;
+				ToMeSetupMod.logger.catching(e);
 			}
 		}
 		
@@ -170,11 +192,15 @@ public class ConfigHandler {
 		i = 0;
 		for(String s:StartItemOreDictMeta) {
 			try {
+				//i++;
 				StartItemOreDictMetas[i] = Integer.parseInt(s);
 				i++;
 			} catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				//e.printStackTrace();
+				StartItemOreDictMetas[i] = 0;
+				i++;
+				ToMeSetupMod.logger.catching(e);
 			}
 		}
 		
@@ -182,11 +208,15 @@ public class ConfigHandler {
 		i = 0;
 		for(String s:StartItemOreDictCount) {
 			try {
+				//i++;
 				StartItemOreDictCounts[i] = Integer.parseInt(s);
 				i++;
 			} catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				//e.printStackTrace();
+				StartItemOreDictCounts[i] = 0;
+				i++;
+				ToMeSetupMod.logger.catching(e);
 			}
 		}
 	}
