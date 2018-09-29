@@ -11,3 +11,5 @@ tomesetup.item.missing=§4Could not Find a Item Named
 tomesetup.item.oredict.missing=§4Could not Find a Item with the OreDict Name 
 tomesetup.item.number.exceeded=§4The Tried Item count was higher than the stack Limit of that Item, it was 
 tomesetup.item.meta.exceeded=§4The Tried Item meta was higher than the meta Limit of that Item, it was 
+command.startitems.usage=/startitems [player]
+command.startitems.success=Given %s * %d to %s
