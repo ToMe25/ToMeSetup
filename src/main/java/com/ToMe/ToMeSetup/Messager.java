@@ -22,6 +22,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import scala.util.parsing.json.JSONObject;
 
+@Deprecated
 public class Messager {
 	
 	private int Players = 5;

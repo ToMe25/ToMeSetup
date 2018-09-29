@@ -2,6 +2,10 @@ package com.ToMe.ToMeSetup;
 
 import java.io.File;
 
+import com.ToMe.ToMeSetup.api.Messager;
+import com.ToMe.ToMeSetup.api.StartItems.impl.StartItemContainer;
+import com.ToMe.ToMeSetup.api.StartItems.impl.StartItemProvider;
+
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -72,6 +76,7 @@ public class ConfigHandler {
             if (config.hasChanged()) {
                 config.save();
             }
+            useConfig();
         }
 		//InitConfig(config);
 	}
@@ -166,7 +171,8 @@ public class ConfigHandler {
 			} catch (Exception e) {
 				// TODO: handle exception
 				//e.printStackTrace();
-				StartItemCounts[i] = 0;
+				//StartItemCounts[i] = 0;
+				StartItemCounts[i] = 1;
 				i++;
 				ToMeSetupMod.logger.catching(e);
 			}
@@ -214,10 +220,27 @@ public class ConfigHandler {
 			} catch (Exception e) {
 				// TODO: handle exception
 				//e.printStackTrace();
-				StartItemOreDictCounts[i] = 0;
+				//StartItemOreDictCounts[i] = 0;
+				StartItemOreDictCounts[i] = 1;
 				i++;
 				ToMeSetupMod.logger.catching(e);
 			}
+		}
+	}
+	
+	protected static void useConfig() {
+		Messager.enableTooltips = enableTooltips;
+		StartItemProvider.startItemsOnRespawn = startItemsOnRespawn;
+		int i = 0;
+		for(String s:StartItems) {
+			StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemCounts.length > i ? StartItemCounts[i] : 1, StartItemMetas.length > i ? StartItemMetas[i] : 0, 0, false));
+			i++;
+		}
+		i = 0;
+		for(String s:StartItemOreDicts) {
+			//System.out.println("ConfigHandler: " + (StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0));
+			StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemOreDictCounts.length > i ? StartItemOreDictCounts[i] : 1, StartItemOreDictMetas.length > i ? StartItemOreDictMetas[i] : -1, StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0, true));
+			i++;
 		}
 	}
 	

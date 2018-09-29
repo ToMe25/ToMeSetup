@@ -6,6 +6,8 @@ import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
 
+import com.ToMe.ToMeSetup.api.Messager;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockLiquid;
@@ -32,6 +34,7 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -52,10 +55,15 @@ public class ToMeSetupMod {
 	public static final String NAME = "ToMe Setup";
 	public static final String VERSION = "1.0";
 	public static final String MCVERSION = "[1.10,1.10.2]";
+	//public static final String API_VERSION = "1.0";
+	//public static final String API_OWNER = "ToMeSetup";
+	//public static final String API_PROVIDES = "A Api to add and remove StartItems to/from ToMeSetup.";
 	
 	public static ConfigHandler cfg;
 	
-	public static StartItemProvider SIP;
+	private static StartItemCommand startItemCMD = new StartItemCommand();
+	
+	//public static StartItemProvider SIP;
 	
 	protected boolean setuped = false;
 	
@@ -71,10 +79,10 @@ public class ToMeSetupMod {
 	public void preInit(FMLPreInitializationEvent e) {
 		logger = e.getModLog();
 		cfg = new ConfigHandler(e);
-		SIP = new StartItemProvider();
+		//SIP = new StartItemProvider();
 		//logger = e.getModLog();
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(SIP);
+		//MinecraftForge.EVENT_BUS.register(SIP);
 		dims = new ArrayList<Integer>();
 		OreDictionary.registerOre("bedrock", Blocks.BEDROCK);
 		//MinecraftForge.TERRAIN_GEN_BUS.register(this);
@@ -82,19 +90,25 @@ public class ToMeSetupMod {
 	
 	@EventHandler
 	public void Init(FMLInitializationEvent e) {
-		Messager.initLangMap();
+		//Messager.initLangMap();
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		if(ConfigHandler.enableStartItems) {
-			StartItemProvider.validateStartItemConfig();
+			//StartItemProvider.validateStartItemConfig();
+			com.ToMe.ToMeSetup.api.StartItems.impl.StartItemProvider.instance.validateStartItems();
 		}
 	}
 	
 	/*public static void registerMessager(Messager m) {
 		MinecraftForge.EVENT_BUS.register(m);
 	}*/
+	
+	@EventHandler
+	public void onServerLoad(FMLServerStartingEvent e) {
+		e.registerServerCommand(startItemCMD);
+	}
 	
 	@SubscribeEvent
 	//@EventHandler
@@ -479,6 +493,7 @@ public class ToMeSetupMod {
 	public boolean placeBlock(World w, String registryName, String oreDictName, boolean useOreDict, int meta, int oreDictNumber, int height, boolean errored) {
 		//boolean ret = false;
 		boolean ret = errored;
+		com.ToMe.ToMeSetup.api.Messager mess = new com.ToMe.ToMeSetup.api.Messager("{\"text\":\"Just for creating new ones.\"}", 0, null);
 		//oreDictNumber --;
 		try {
 			//throw new NullPointerException("Test Exception!!!");//TEST(Crashes with Unresolved compilation problem)
@@ -508,7 +523,8 @@ public class ToMeSetupMod {
 								//Messager.sendBlockOreDictItem(oreDictName);
 								//Messager.sendBlockOreDictItem("" + oreDictNumber);
 								//Messager.sendBlockOreDictItem(oreDictName + oreDictNumber);
-								Messager.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+								//Messager.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+								mess.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
 								ret = true;
 							}
 						}
@@ -530,7 +546,8 @@ public class ToMeSetupMod {
 								//Messager.sendBlockOreDictItem(oreDictName);
 								//Messager.sendBlockOreDictItem("" + oreDictNumber);
 								//Messager.sendBlockOreDictItem(oreDictName + oreDictNumber);
-								Messager.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+								//Messager.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+								mess.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
 								ret = true;
 							}
 						}
@@ -561,7 +578,8 @@ public class ToMeSetupMod {
 						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
 						//registerMessager(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
 						//TODO Rebuild after a Test!
-						Messager.sendMissingBlockOreDict(oreDictName);
+						//Messager.sendMissingBlockOreDict(oreDictName);
+						mess.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
 						ret = true;
 					}
 				}
@@ -585,7 +603,8 @@ public class ToMeSetupMod {
 					if(!errored) {
 						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + registryName + "!"));
 						//registerMessager(new Messager("Could not Find Block Named " + registryName + "!"));
-						Messager.sendMissingBlock(registryName);
+						//Messager.sendMissingBlock(registryName);
+						mess.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
 						ret = true;
 					}
 				}
@@ -595,7 +614,8 @@ public class ToMeSetupMod {
 			//MinecraftForge.EVENT_BUS.register(new Messager("An Unknown Error occures while Replacing a Block!"));
 			//registerMessager(new Messager("An Unknown Error occures while Replacing a Block!"));
 			//Messager.sendMessage("An Unknown Error occures while Replacing a Block!");
-			Messager.sendMessage("An Unknown Error occures while Replacing a Block!", 5, null, "Maybe its a Bug?");
+			//Messager.sendMessage("An Unknown Error occures while Replacing a Block!", 5, null, "Maybe its a Bug?");
+			mess.sendMessage("An Unknown Error occures while Replacing a Block!", "ToMeSetup", 5, null, "Maybe its a Bug?");
 			logger.catching(e);
 		}
 		return ret;

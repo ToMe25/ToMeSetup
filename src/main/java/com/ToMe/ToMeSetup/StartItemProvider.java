@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
+@Deprecated
 public class StartItemProvider {
 	
 	private static final String GOT_START_ITEMS = "tomesetup:gotstartitems";
