@@ -1,5 +1,6 @@
 package com.ToMe.ToMeSetup.api.StartItems.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -10,6 +11,7 @@ import com.ToMe.ToMeSetup.api.IMessager;
 import com.ToMe.ToMeSetup.api.Messager;
 import com.ToMe.ToMeSetup.api.StartItems.IStartItemContainer;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -131,8 +133,40 @@ public class StartItemContainer implements IStartItemContainer {
 				//ret.stackSize = count;
 				ret.setCount(count);
 				int meta = this.meta;
-				if(meta > ret.getMaxDamage()) {
-					meta = ret.getMaxDamage();
+				//List<ItemStack> list = new ArrayList<ItemStack>();
+				//ret.getItem().getSubItems(ret.getItem(), CreativeTabs.SEARCH, list);
+				//List<Integer> metas = new ArrayList<Integer>();
+				//ItemStack metaStack = ret.copy();
+				//ItemStack metaStack = new ItemStack(ret.getItem());
+				//int i = 0;
+				//for(ItemStack s:list) {
+				//while(i <= Integer.MAX_VALUE) {
+					//metas.add(s.getMetadata());
+					//metaStack.setItemDamage(i);
+					//if(!metaStack.getDisplayName().equalsIgnoreCase(metaStack.getUnlocalizedName())) {
+						//System.out.println("StartItemContainer: " + "Found Meta with localized Name " + metaStack.getDisplayName() + ", unlocalized Name " + metaStack.getUnlocalizedName() + " and Meta " + i);
+						//metas.add(i);
+					//}
+					//i++;
+				//}
+				//if(ret.getHasSubtypes()) {
+					//int i = 0;
+					//while(i <= Integer.MAX_VALUE) {
+						//metaStack.setItemDamage(i);
+						//if(!metaStack.getDisplayName().equalsIgnoreCase(metaStack.getUnlocalizedName())) {
+							//System.out.println("StartItemContainer: " + "Found Meta with localized Name " + metaStack.getDisplayName() + ", unlocalized Name " + metaStack.getUnlocalizedName() + " and Meta " + i);
+							//metas.add(i);
+						//}
+						//i++;
+					//}
+				//}
+				//if(meta > ret.getMaxDamage()) {
+				//if(meta > ret.getItem().getMaxDamage(ret)) {
+				if(meta > ret.getItem().getMaxDamage(ret) && !ret.getHasSubtypes()) {
+				//if(meta > ret.getMaxDamage() && !metas.contains(meta)) {
+					//meta = ret.getMaxDamage();
+					meta = ret.getItem().getMaxDamage(ret);
+					//meta = ret.getItem().getMetadata(meta);
 					if(player != null) {
 						messager.sendExceededItemMeta("" + this.meta, 0, player);
 					}
