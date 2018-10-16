@@ -49,9 +49,11 @@ public class StartItemCommand extends CommandBase {
 			player = getPlayer(server, sender, args[0]);
 		}
 		boolean flag = false;
-		for(ItemStack itm:StartItemProvider.instance.getStartItems()) {
+		//for(ItemStack itm:StartItemProvider.instance.getStartItems()) {
+		for(ItemStack itm:StartItemProvider.instance.getStartItems(player)) {
 			int count = itm.stackSize;
-			boolean fl = player.inventory.addItemStackToInventory(itm);
+			//boolean fl = player.inventory.addItemStackToInventory(itm);
+			boolean fl = player.inventory.addItemStackToInventory(itm.copy());
 			flag = (fl == true || flag == true);
 			//ToMeSetupMod.logger.info("StartItemsCommand: " + Integer.valueOf(itm.stackSize));
 			//notifyCommandListener(sender, this, "command.startitems.success", new Object[] {itm.getTextComponent(), Integer.valueOf(itm.stackSize), player.getName()});
