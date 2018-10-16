@@ -51,7 +51,8 @@ public class StartItemCommand extends CommandBase {
 			player = getPlayer(server, sender, args[0]);
 		}
 		boolean flag = false;
-		for(ItemStack itm:StartItemProvider.instance.getStartItems()) {
+		//for(ItemStack itm:StartItemProvider.instance.getStartItems()) {
+		for(ItemStack itm:StartItemProvider.instance.getStartItems(player)) {
 			//int count = itm.stackSize;
 			int count = itm.getCount();
 			//boolean fl = player.inventory.addItemStackToInventory(itm);
