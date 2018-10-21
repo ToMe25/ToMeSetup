@@ -19,7 +19,7 @@ public interface IStartItemProvider {
 	
 	/**
 	 * Gets the Start Items from Config.
-	 * Only use for Checks!
+	 * Do not use for Checks!
 	 * @param player it will send error messages to this player.
 	 * @return returns a list of all Start Items
 	 */
