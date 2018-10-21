@@ -108,6 +108,9 @@ public class ToMeSetupMod {
 	@EventHandler
 	public void onServerLoad(FMLServerStartingEvent e) {
 		e.registerServerCommand(startItemCMD);
+		if(ConfigHandler.enableGamerules) {
+			e.getServer().setAllowPvp(ConfigHandler.pvp);
+		}
 	}
 	
 	@SubscribeEvent
@@ -143,6 +146,7 @@ public class ToMeSetupMod {
 	//@SubscribeEvent(priority = EventPriority.LOWEST)
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load e) {
+		cfg.onWorldLoad(e.getWorld());
 		//if(!setuped) {
 			setup(e.getWorld());
 			//setuped = true;
@@ -207,15 +211,20 @@ public class ToMeSetupMod {
 	public void setup(World w) {
 		//Messager.sendMissingBlock("Test", 4);//A Test!
 		if(!w.isRemote) {
-			if(!w.isRemote) {
-				w.getGameRules().setOrCreateGameRule("keepInventory", "" + ConfigHandler.keepInventory);
-				w.getGameRules().setOrCreateGameRule("mobGriefing", "" + ConfigHandler.mobGriefing);
-				w.getGameRules().setOrCreateGameRule("doFireTick", "" + ConfigHandler.doFireTick);
-				w.getGameRules().setOrCreateGameRule("doMobSpawning", "" + ConfigHandler.doMobSpawning);
-				w.getGameRules().setOrCreateGameRule("spawnRadius", "" + ConfigHandler.spawnRadius);
-				w.getGameRules().setOrCreateGameRule("doDaylightCycle", "" + ConfigHandler.doDaylightCycle);
-				w.getGameRules().setOrCreateGameRule("doTileDrops", "" + ConfigHandler.doTileDrops);
-				w.getGameRules().setOrCreateGameRule("doMobLoot", "" + ConfigHandler.doMobLoot);
+			//if(!w.isRemote) {
+				if(ConfigHandler.enableGamerules == true) {
+					for(String rule:ConfigHandler.configValues.keySet()) {
+						w.getGameRules().setOrCreateGameRule(rule, "" + ConfigHandler.configValues.get(rule));
+					}
+				}
+				//w.getGameRules().setOrCreateGameRule("keepInventory", "" + ConfigHandler.keepInventory);
+				//w.getGameRules().setOrCreateGameRule("mobGriefing", "" + ConfigHandler.mobGriefing);
+				//w.getGameRules().setOrCreateGameRule("doFireTick", "" + ConfigHandler.doFireTick);
+				//w.getGameRules().setOrCreateGameRule("doMobSpawning", "" + ConfigHandler.doMobSpawning);
+				//w.getGameRules().setOrCreateGameRule("spawnRadius", "" + ConfigHandler.spawnRadius);
+				//w.getGameRules().setOrCreateGameRule("doDaylightCycle", "" + ConfigHandler.doDaylightCycle);
+				//w.getGameRules().setOrCreateGameRule("doTileDrops", "" + ConfigHandler.doTileDrops);
+				//w.getGameRules().setOrCreateGameRule("doMobLoot", "" + ConfigHandler.doMobLoot);
 				if(ConfigHandler.setWorldspawn == true) {
 					if(ConfigHandler.setBedrock) {
 						groundError = placeBlock(w, ConfigHandler.groundBlock, ConfigHandler.groundOreDict, ConfigHandler.groundEnableOreDict, ConfigHandler.groundMeta, ConfigHandler.groundNumber, 0, groundError);
@@ -486,7 +495,7 @@ public class ToMeSetupMod {
 						}*/
 					}
 				}
-			}
+			//}
 		}
 	}
 	
