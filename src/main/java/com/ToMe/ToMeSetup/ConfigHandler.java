@@ -1,16 +1,20 @@
 package com.ToMe.ToMeSetup;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ToMe.ToMeSetup.api.Messager;
 import com.ToMe.ToMeSetup.api.StartItems.impl.StartItemContainer;
 import com.ToMe.ToMeSetup.api.StartItems.impl.StartItemProvider;
 
+import net.minecraft.world.GameRules.ValueType;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Deprecated
 public class ConfigHandler {
 	
 	public Configuration config;
@@ -18,14 +22,19 @@ public class ConfigHandler {
 	public static boolean enableTooltips;
 	//GAMERULES
 	public static final String CATEGORY_GAMERULES = "gamerules";
-	public static boolean keepInventory;
-	public static boolean mobGriefing;
-	public static boolean doFireTick;
-	public static boolean doMobSpawning;
-	public static int spawnRadius;
-	public static boolean doDaylightCycle;
-	public static boolean doTileDrops;
-	public static boolean doMobLoot;
+	public static boolean enableGamerules = true;
+	private static boolean initGamerules = false;
+	public static final Map<String, Object> customDefaultValues;
+	public static Map<String, Object> configValues = new HashMap<String, Object>();
+	public static boolean pvp = true;
+	//public static boolean keepInventory;
+	//public static boolean mobGriefing;
+	//public static boolean doFireTick;
+	//public static boolean doMobSpawning;
+	//public static int spawnRadius;
+	//public static boolean doDaylightCycle;
+	//public static boolean doTileDrops;
+	//public static boolean doMobLoot;
 	//WORLDSPAWN
 	public static final String CATEGORY_WORLDSPAWN = "worldspawn";
 	public static boolean setWorldspawn;
@@ -66,6 +75,13 @@ public class ConfigHandler {
 	public static String[] StartItemOreDictCount = {"16"};
 	public static int[] StartItemOreDictCounts;
 	
+	static {
+		customDefaultValues = new HashMap<String, Object>();
+		customDefaultValues.put("keepInventory", true);
+		customDefaultValues.put("mobGriefing", false);
+		customDefaultValues.put("spawnRadius", 0);
+	}
+	
 	public ConfigHandler(FMLPreInitializationEvent e) {
 		config = new Configuration(new File(e.getModConfigurationDirectory(), "ToMeSetup.cfg"));
 		try {
@@ -82,7 +98,8 @@ public class ConfigHandler {
 		//InitConfig(config);
 	}
 	
-	public static void InitConfig(Configuration cfg) {
+	//public static void InitConfig(Configuration cfg) {
+	private static void InitConfig(Configuration cfg) {
 		//ConfigCategory gamerules = new ConfigCategory("gamerules");
 		//cfg.addCustomCategoryComment("gamerules", "Test");
 		
@@ -91,15 +108,21 @@ public class ConfigHandler {
 		enableTooltips = cfg.getBoolean("enableErrorTooltips", Configuration.CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
 		
 		//GAMERULES
+		if(!cfg.hasCategory(CATEGORY_GAMERULES)) {
+			initGamerules = true;
+		}
 		cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
-		keepInventory = cfg.getBoolean("keepInventory", CATEGORY_GAMERULES, true, "The gamerule keepInventory determines whether the Pleyer keeps his Items on death in Inventory. To set this manually do \"/gamerule keepInventory true\"!");
-		mobGriefing = cfg.getBoolean("mobGriefing", CATEGORY_GAMERULES, false, "The gamerule mobGriefing determines whether Mobs con break Blocks or pickup Items. To set this manually do \"/gamerule mobGriefing false\"!");
-		doFireTick = cfg.getBoolean("doFireTick", CATEGORY_GAMERULES, true, "The gamerule doFireTick determines whether Spreads and destroys Blocks. To set this manually do \"/gamerule doFireTick true\"!");
-		doMobSpawning = cfg.getBoolean("doMobSpawning", CATEGORY_GAMERULES, true, "The gamerule doMobSpawning determines whether Mobs Spawn int the World. To set this manually do \"/gamerule doMobSpawning true\"!");
-		spawnRadius = cfg.getInt("spawnRadius", CATEGORY_GAMERULES, 0, 0, Integer.MAX_VALUE, "The gamerule spawnRadius determines the Radius to spawn around the Worldspawn. To set this manually do \"/gamerule spawnRadius 0\"!");
-		doDaylightCycle = cfg.getBoolean("doDaylightCycle", CATEGORY_GAMERULES, true, "The gamerule doDaylightCycle determines whether the Minecraft Sun and Moon moves over the Sky. To Set this manually do \"/gamerule doDaylightCycle true\"!");
-		doTileDrops = cfg.getBoolean("doTileDrops", CATEGORY_GAMERULES, true, "The gamerule doTileDrops determines whether you get Items by Mining Blocks. To set this manually do \"/gamerule doTileDrops true\"!");
-		doMobLoot = cfg.getBoolean("doMobLoot", CATEGORY_GAMERULES, true, "The gamerule doMobLoot determines whether you get Items by Killing Mobs. To set this manually do \"/gamerule doMobLoot true\"");
+		enableGamerules = cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
+		pvp = cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
+		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
+		//keepInventory = cfg.getBoolean("keepInventory", CATEGORY_GAMERULES, true, "The gamerule keepInventory determines whether the Pleyer keeps his Items on death in Inventory. To set this manually do \"/gamerule keepInventory true\"!");
+		//mobGriefing = cfg.getBoolean("mobGriefing", CATEGORY_GAMERULES, false, "The gamerule mobGriefing determines whether Mobs con break Blocks or pickup Items. To set this manually do \"/gamerule mobGriefing false\"!");
+		//doFireTick = cfg.getBoolean("doFireTick", CATEGORY_GAMERULES, true, "The gamerule doFireTick determines whether Spreads and destroys Blocks. To set this manually do \"/gamerule doFireTick true\"!");
+		//doMobSpawning = cfg.getBoolean("doMobSpawning", CATEGORY_GAMERULES, true, "The gamerule doMobSpawning determines whether Mobs Spawn int the World. To set this manually do \"/gamerule doMobSpawning true\"!");
+		//spawnRadius = cfg.getInt("spawnRadius", CATEGORY_GAMERULES, 0, 0, Integer.MAX_VALUE, "The gamerule spawnRadius determines the Radius to spawn around the Worldspawn. To set this manually do \"/gamerule spawnRadius 0\"!");
+		//doDaylightCycle = cfg.getBoolean("doDaylightCycle", CATEGORY_GAMERULES, true, "The gamerule doDaylightCycle determines whether the Minecraft Sun and Moon moves over the Sky. To Set this manually do \"/gamerule doDaylightCycle true\"!");
+		//doTileDrops = cfg.getBoolean("doTileDrops", CATEGORY_GAMERULES, true, "The gamerule doTileDrops determines whether you get Items by Mining Blocks. To set this manually do \"/gamerule doTileDrops true\"!");
+		//doMobLoot = cfg.getBoolean("doMobLoot", CATEGORY_GAMERULES, true, "The gamerule doMobLoot determines whether you get Items by Killing Mobs. To set this manually do \"/gamerule doMobLoot true\"");
 		
 		//WORLDSPAWN
 		cfg.addCustomCategoryComment(CATEGORY_WORLDSPAWN, "What to do with the Worldspawn.");
@@ -229,6 +252,20 @@ public class ConfigHandler {
 		}
 	}
 	
+	public void onWorldLoad(World world) {
+		//if(!config.hasCategory(CATEGORY_GAMERULES)) {
+		if(initGamerules) {
+			try {
+	            initGamerulesConfig(config, world);
+	        } finally {
+	            if (config.hasChanged()) {
+	                config.save();
+	            }
+	        }
+		}
+		readGamerulesConfig(config);
+	}
+	
 	protected static void useConfig() {
 		Messager.enableTooltips = enableTooltips;
 		StartItemProvider.startItemsOnRespawn = startItemsOnRespawn;
@@ -242,6 +279,64 @@ public class ConfigHandler {
 			//System.out.println("ConfigHandler: " + (StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0));
 			StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemOreDictCounts.length > i ? StartItemOreDictCounts[i] : 1, StartItemOreDictMetas.length > i ? StartItemOreDictMetas[i] : -1, StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0, true));
 			i++;
+		}
+	}
+	
+	private void initGamerulesConfig(Configuration cfg, World w) {
+		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
+		//enableGamerules = cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
+		//pvp = cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
+		for(String rule:w.getGameRules().getRules()) {
+			if(w.getGameRules().areSameType(rule, ValueType.BOOLEAN_VALUE)) {
+				boolean value = w.getGameRules().getBoolean(rule);
+				if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Boolean) {
+					value = (Boolean) customDefaultValues.get(rule);
+				}
+				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " set?");
+			}
+			else if(w.getGameRules().areSameType(rule, ValueType.NUMERICAL_VALUE)) {
+				int value = w.getGameRules().getInt(rule);
+				if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Integer) {
+					value = (Integer) customDefaultValues.get(rule);
+				}
+				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " set?");
+			}
+			else if(w.getGameRules().areSameType(rule, ValueType.ANY_VALUE)) {
+				String value = w.getGameRules().getString(rule);
+				if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof String) {
+					value = (String) customDefaultValues.get(rule);
+				}
+				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " set?");
+			}
+		}
+		initGamerules = false;
+	}
+	
+	private void readGamerulesConfig(Configuration cfg) {
+		if(cfg.hasCategory(CATEGORY_GAMERULES)) {
+			ConfigCategory rules = cfg.getCategory(CATEGORY_GAMERULES);
+			Map<String, Property> rulesMap = rules.getValues();
+			for(String rule:rulesMap.keySet()) {
+				//if(rule.equalsIgnoreCase("enableGamerules")) {
+					//enableGamerules = rulesMap.get(rule).getBoolean();
+				//}
+				//else if(rule.equalsIgnoreCase("pvp")) {
+					//pvp = rulesMap.get(rule).getBoolean();
+				//}
+				//else {
+				if(!rule.equalsIgnoreCase("enableGamerules") && !rule.equalsIgnoreCase("pvp")) {
+					Property.Type t = rulesMap.get(rule).getType();
+					if(t.equals(Property.Type.BOOLEAN)) {
+						configValues.put(rule, rulesMap.get(rule).getBoolean());
+					}
+					else if(t.equals(Property.Type.INTEGER)) {
+						configValues.put(rule, rulesMap.get(rule).getInt());
+					}
+					else if(t.equals(Property.Type.STRING)) {
+						configValues.put(rule, rulesMap.get(rule).getString());
+					}
+				}
+			}
 		}
 	}
 	
