@@ -20,6 +20,7 @@ public class ConfigHandler {
 	public Configuration config;
 	//GENERAL
 	public static boolean enableTooltips;
+	public static boolean explosionBlockDamage = true;
 	//GAMERULES
 	public static final String CATEGORY_GAMERULES = "gamerules";
 	public static boolean enableGamerules = true;
@@ -78,7 +79,8 @@ public class ConfigHandler {
 	static {
 		customDefaultValues = new HashMap<String, Object>();
 		customDefaultValues.put("keepInventory", true);
-		customDefaultValues.put("mobGriefing", false);
+		//customDefaultValues.put("mobGriefing", false);
+		customDefaultValues.put(GameruleHandler.EXPLOSIONBLOCKDAMAGE, false);
 		customDefaultValues.put("spawnRadius", 0);
 	}
 	
@@ -106,6 +108,7 @@ public class ConfigHandler {
 		//GENERAL
 		cfg.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "The General Configs.");
 		enableTooltips = cfg.getBoolean("enableErrorTooltips", Configuration.CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
+		explosionBlockDamage = cfg.getBoolean("explosionBlockDamage", Configuration.CATEGORY_GENERAL, explosionBlockDamage, "Whether this Mod should add the explosionBlockDamage Gamerule");
 		
 		//GAMERULES
 		if(!cfg.hasCategory(CATEGORY_GAMERULES)) {
@@ -114,6 +117,18 @@ public class ConfigHandler {
 		cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
 		enableGamerules = cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
 		pvp = cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
+		for(String rule:customDefaultValues.keySet()) {
+			//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			if(customDefaultValues.get(rule) instanceof Boolean) {
+				cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			}
+			else if(customDefaultValues.get(rule) instanceof Integer) {
+				cfg.get(CATEGORY_GAMERULES, rule, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			}
+			else if(customDefaultValues.get(rule) instanceof String) {
+				cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			}
+		}
 		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
 		//keepInventory = cfg.getBoolean("keepInventory", CATEGORY_GAMERULES, true, "The gamerule keepInventory determines whether the Pleyer keeps his Items on death in Inventory. To set this manually do \"/gamerule keepInventory true\"!");
 		//mobGriefing = cfg.getBoolean("mobGriefing", CATEGORY_GAMERULES, false, "The gamerule mobGriefing determines whether Mobs con break Blocks or pickup Items. To set this manually do \"/gamerule mobGriefing false\"!");
@@ -271,14 +286,24 @@ public class ConfigHandler {
 		StartItemProvider.startItemsOnRespawn = startItemsOnRespawn;
 		int i = 0;
 		for(String s:StartItems) {
-			StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemCounts.length > i ? StartItemCounts[i] : 1, StartItemMetas.length > i ? StartItemMetas[i] : 0, 0, false));
-			i++;
+			//if(!s.isEmpty()) {
+			//if(s != "" && !s.isEmpty()) {
+			if(s != null && !s.isEmpty()) {
+				StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemCounts.length > i ? StartItemCounts[i] : 1, StartItemMetas.length > i ? StartItemMetas[i] : 0, 0, false));
+				i++;
+			}
+			//StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemCounts.length > i ? StartItemCounts[i] : 1, StartItemMetas.length > i ? StartItemMetas[i] : 0, 0, false));
+			//i++;
 		}
 		i = 0;
 		for(String s:StartItemOreDicts) {
+			if(s != null && !s.isEmpty()) {
+				StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemOreDictCounts.length > i ? StartItemOreDictCounts[i] : 1, StartItemOreDictMetas.length > i ? StartItemOreDictMetas[i] : -1, StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0, true));
+				i++;
+			}
 			//System.out.println("ConfigHandler: " + (StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0));
-			StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemOreDictCounts.length > i ? StartItemOreDictCounts[i] : 1, StartItemOreDictMetas.length > i ? StartItemOreDictMetas[i] : -1, StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0, true));
-			i++;
+			//StartItemProvider.instance.addStartItem(new StartItemContainer(s, StartItemOreDictCounts.length > i ? StartItemOreDictCounts[i] : 1, StartItemOreDictMetas.length > i ? StartItemOreDictMetas[i] : -1, StartItemOreDictNumbers.length > i ? StartItemOreDictNumbers[i] : 0, true));
+			//i++;
 		}
 	}
 	
