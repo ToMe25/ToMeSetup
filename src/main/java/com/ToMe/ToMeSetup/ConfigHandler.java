@@ -117,16 +117,30 @@ public class ConfigHandler {
 		cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
 		enableGamerules = cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
 		pvp = cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
-		for(String rule:customDefaultValues.keySet()) {
+		//for(String rule:customDefaultValues.keySet()) {
 			//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-			if(customDefaultValues.get(rule) instanceof Boolean) {
-				cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-			}
-			else if(customDefaultValues.get(rule) instanceof Integer) {
-				cfg.get(CATEGORY_GAMERULES, rule, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-			}
-			else if(customDefaultValues.get(rule) instanceof String) {
-				cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			//if(customDefaultValues.get(rule) instanceof Boolean) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			//}
+			//else if(customDefaultValues.get(rule) instanceof Integer) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			//}
+			//else if(customDefaultValues.get(rule) instanceof String) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			//}
+		//}
+		if(initGamerules) {
+			for(String rule:customDefaultValues.keySet()) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				if(customDefaultValues.get(rule) instanceof Boolean) {
+					cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				}
+				else if(customDefaultValues.get(rule) instanceof Integer) {
+					cfg.get(CATEGORY_GAMERULES, rule, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				}
+				else if(customDefaultValues.get(rule) instanceof String) {
+					cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				}
 			}
 		}
 		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
