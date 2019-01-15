@@ -26,6 +26,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -74,6 +75,8 @@ public class ToMeSetupMod {
 	public static Logger logger;
 	
 	protected List<Integer> dims;
+	
+	private boolean gamerulesInitialzed = false;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
@@ -124,6 +127,11 @@ public class ToMeSetupMod {
 	//public void onWorldCreated(DecorateBiomeEvent.Decorate e) {
 	//public void onWorldCreated(DecorateBiomeEvent e) {
 	public void onWorldCreated(EntityJoinWorldEvent e) {
+		if(!gamerulesInitialzed) {
+			GameruleHandler.onWorldLoad(e.getWorld());
+			gamerulesInitialzed = true;
+		}
+		//System.out.println("Create");
 		WorldProvider pro = e.getWorld().provider;
 		if(!dims.contains(pro.getDimension())) {
 			setup(e.getWorld());
@@ -142,11 +150,21 @@ public class ToMeSetupMod {
 		//e.getWorld().provider.
 	}
 	
+	@SubscribeEvent
+	public void onExplosion(ExplosionEvent.Detonate e) {
+		//if(!e.getWorld().getGameRules().getBoolean(GameruleHandler.EXPLOSIONBLOCKDAMAGE)) {
+		if(ConfigHandler.explosionBlockDamage && !e.getWorld().getGameRules().getBoolean(GameruleHandler.EXPLOSIONBLOCKDAMAGE)) {
+			e.getAffectedBlocks().clear();
+		}
+	}
+	
 	//@SideOnly(Side.SERVER)
 	//@SubscribeEvent(priority = EventPriority.LOWEST)
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load e) {
+		//System.out.println("Load");
 		cfg.onWorldLoad(e.getWorld());
+		GameruleHandler.onWorldLoad(e.getWorld());
 		//if(!setuped) {
 			setup(e.getWorld());
 			//setuped = true;
