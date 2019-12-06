@@ -2,9 +2,10 @@ package com.ToMe.ToMeSetup.api;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+//import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+//import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public interface IMessager {
 	
@@ -51,7 +52,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendMessage(String msg, String mod, int players, @Nullable EntityPlayer player);
+	//IMessager sendMessage(String msg, String mod, int players, @Nullable EntityPlayer player);
+	IMessager sendMessage(String msg, String mod, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console.
@@ -64,7 +66,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendMessage(String msg, String mod, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendMessage(String msg, String mod, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendMessage(String msg, String mod, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console.
@@ -91,7 +94,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendMessageJson(String msg, int players, @Nullable EntityPlayer player);
+	//IMessager sendMessageJson(String msg, int players, @Nullable EntityPlayer player);
+	IMessager sendMessageJson(String msg, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says the specified Block is missing.
@@ -121,7 +125,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendMissingBlock(String block, int players, @Nullable EntityPlayer player);
+	//IMessager sendMissingBlock(String block, int players, @Nullable EntityPlayer player);
+	IMessager sendMissingBlock(String block, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says the specified Block is missing.
@@ -134,7 +139,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendMissingBlock(String block, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendMissingBlock(String block, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendMissingBlock(String block, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says there are no Block with the specified OreDict Registration.
@@ -164,7 +170,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable EntityPlayer player);
+	//IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable EntityPlayer player);
+	IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says there are no Block with the specified OreDict Registration.
@@ -177,7 +184,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says there are no Block(only a Item) with the specified OreDict Registration.
@@ -207,7 +215,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendBlockOreDictItem(String number, int players, @Nullable EntityPlayer player);
+	//IMessager sendBlockOreDictItem(String number, int players, @Nullable EntityPlayer player);
+	IMessager sendBlockOreDictItem(String number, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says there are no Block(only a Item) with the specified OreDict Registration.
@@ -220,7 +229,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendBlockOreDictItem(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendBlockOreDictItem(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendBlockOreDictItem(String number, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says the specified Item is missing.
@@ -250,7 +260,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendMissingItem(String item, int players, @Nullable EntityPlayer player);
+	//IMessager sendMissingItem(String item, int players, @Nullable EntityPlayer player);
+	IMessager sendMissingItem(String item, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says the specified Item is missing.
@@ -263,7 +274,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendMissingItem(String item, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendMissingItem(String item, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendMissingItem(String item, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says there are no Item with the specified OreDict Registration.
@@ -291,9 +303,10 @@ public interface IMessager {
 	 * @param oreDict the missing Item OreDict!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return the message
+	 * @return
 	 */
-	IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable EntityPlayer player);
+	//IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable EntityPlayer player);
+	IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says there are no Item with the specified OreDict Registration.
@@ -304,16 +317,17 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return the message
+	 * @return
 	 */
-	IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says the specified Item can't have so a high Count.
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the tried Item Number!
-	 * @return the message
+	 * @return
 	 */
 	IMessager sendExceededStackLimit(String number);
 	
@@ -323,7 +337,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the tried Item Number!
 	 * @param players how many Players will get The Message.
-	 * @return the message
+	 * @return
 	 */
 	IMessager sendExceededStackLimit(String number, int players);
 	
@@ -336,7 +350,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendExceededStackLimit(String number, int players, @Nullable EntityPlayer player);
+	//IMessager sendExceededStackLimit(String number, int players, @Nullable EntityPlayer player);
+	IMessager sendExceededStackLimit(String number, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says the specified Item can't have so a high Count.
@@ -349,7 +364,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendExceededStackLimit(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendExceededStackLimit(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendExceededStackLimit(String number, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says the specified Item can't have so a high Meta.
@@ -379,7 +395,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendExceededItemMeta(String number, int players, @Nullable EntityPlayer player);
+	//IMessager sendExceededItemMeta(String number, int players, @Nullable EntityPlayer player);
+	IMessager sendExceededItemMeta(String number, int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says the specified Item can't have so a high Meta.
@@ -392,7 +409,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendExceededItemMeta(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendExceededItemMeta(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendExceededItemMeta(String number, int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Sends a Message to the Next 5 Joining Players and the Server Console that says an unknown error occurred while replacing a block.
@@ -419,7 +437,8 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @return the message
 	 */
-	IMessager sendUnknownBlockError(int players, @Nullable EntityPlayer player);
+	//IMessager sendUnknownBlockError(int players, @Nullable EntityPlayer player);
+	IMessager sendUnknownBlockError(int players, @Nullable PlayerEntity player);
 	
 	/**
 	 * Sends a Message to the Next Joining Players and the Server Console that says an unknown error occurred while replacing a block.
@@ -431,7 +450,8 @@ public interface IMessager {
 	 * @param tooltip Format: text(not json)!
 	 * @return the message
 	 */
-	IMessager sendUnknownBlockError(int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	//IMessager sendUnknownBlockError(int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	IMessager sendUnknownBlockError(int players, @Nullable PlayerEntity player, @Nullable String tooltip);
 	
 	/**
 	 * Converts a text to a json to print in Chat(for mod from the implementing class).

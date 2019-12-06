@@ -1,30 +1,37 @@
 package com.ToMe.ToMeSetup.api.StartItems.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+import java.util.Collection;
+//import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.ToMe.ToMeSetup.ToMeSetupMod;
 //import com.ToMe.ToMeSetup.ConfigHandler;
 //import com.ToMe.ToMeSetup.ToMeSetupMod;
 import com.ToMe.ToMeSetup.api.IMessager;
 import com.ToMe.ToMeSetup.api.Messager;
 import com.ToMe.ToMeSetup.api.StartItems.IStartItemContainer;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.PlayerEntity;
+//import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
+//import net.minecraft.tags.Tag;
+//import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.ForgeRegistries;
+//import net.minecraftforge.oredict.OreDictionary;
 
 public class StartItemContainer implements IStartItemContainer {
 	
 	private String name;
 	private int count;
 	private int meta;
-	private int number;
+	//private int number;
 	private boolean oreDict;
 	private IMessager messager;
 	
@@ -33,11 +40,12 @@ public class StartItemContainer implements IStartItemContainer {
 	 * @param name
 	 * @param count
 	 * @param meta
-	 * @param number
 	 * @param oreDict
 	 */
-	public StartItemContainer(String name, int count, int meta, int number, boolean oreDict) {
-		this(name, count, meta, number, oreDict, null);
+	//public StartItemContainer(String name, int count, int meta, int number, boolean oreDict) {
+	public StartItemContainer(String name, int count, int meta, boolean oreDict) {
+		//this(name, count, meta, number, oreDict, null);
+		this(name, count, meta, oreDict, null);
 		//this.name = name;
 		//this.count = count;
 		//this.meta = meta;
@@ -50,18 +58,18 @@ public class StartItemContainer implements IStartItemContainer {
 	 * @param name
 	 * @param count
 	 * @param meta
-	 * @param number
 	 * @param oreDict
 	 * @param messager
 	 */
-	public StartItemContainer(String name, int count, int meta, int number, boolean oreDict, @Nullable IMessager messager) {
+	//public StartItemContainer(String name, int count, int meta, int number, boolean oreDict, @Nullable IMessager messager) {
+	public StartItemContainer(String name, int count, int meta, boolean oreDict, @Nullable IMessager messager) {
 		//if(oreDict && !name.contains(":")) {
 			//name = "minecraft:" + name;
 		//}
 		this.name = name;
 		this.count = count;
 		this.meta = meta;
-		this.number = number;
+		//this.number = number;
 		this.oreDict = oreDict;
 		if(messager == null) {
 			this.messager = new Messager("{\"text\":\"Just for creating new ones.\"}", 0, null);
@@ -78,35 +86,52 @@ public class StartItemContainer implements IStartItemContainer {
 	}
 	
 	@Override
-	public ItemStack getItem(EntityPlayer player) {
+	//public ItemStack getItem(EntityPlayer player) {
+	public ItemStack getItem(PlayerEntity player) {
 		// TODO Auto-generated method stub
 		ItemStack ret = null;
 		try {
 			if(oreDict) {
-				List<ItemStack> oreDict = OreDictionary.getOres(name, false);
-				if(!oreDict.isEmpty()) {
-					int num = number;
-					if(num >= oreDict.size()) {
-						num = oreDict.size() - 1;
-					}
-					if(num < 0) {
-						num = 0;
-					}
+				//List<ItemStack> oreDict = OreDictionary.getOres(name, false);
+				//Collection<Item> oreDict = ItemTags.getCollection().get(new ResourceLocation("forge", ToMeSetupMod.parseOreDict(name))).getAllElements();
+				Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation(ToMeSetupMod.parseOreDict(name)));
+				Collection<Item> oreDict;
+				//if(!oreDict.isEmpty()) {
+				if(tag != null && !(oreDict = tag.getAllElements()).isEmpty()) {
+					ret = new ItemStack(oreDict.iterator().next());
+					//int num = number;
+					//if(num >= oreDict.size()) {
+						//num = oreDict.size() - 1;
+					//}
+					//if(num < 0) {
+						//num = 0;
+					//}
 					//ret = oreDict.get(num);
-					ret = oreDict.get(num).copy();
+					//ret = oreDict.get(num).copy();
+					//int i = 0;
+					//for(Item itm:oreDict) {
+						//if(i == num) {
+							//ret = new ItemStack(itm, 1);
+						//}
+						//i++;
+					//}
 				}
 				else {
 					if(player != null) {
-						messager.sendMissingItemOreDict(name, 0, player);
+						//messager.sendMissingItemOreDict(name, 0, player);
+						messager.sendMissingItemOreDict(name + "(" + ToMeSetupMod.parseOreDict(name) + ")", 0, player);
 					}
 					else {
-						messager.sendMissingItemOreDict(name, 6);
+						//messager.sendMissingItemOreDict(name, 6);
+						messager.sendMissingItemOreDict(name + "(" + ToMeSetupMod.parseOreDict(name) + ")", 6);
 					}
 				}
 			}
 			else {
-				if(Item.REGISTRY.containsKey(new ResourceLocation(name))) {
-					ret = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(name)));
+				//if(Item.REGISTRY.containsKey(new ResourceLocation(name))) {
+				if(ForgeRegistries.ITEMS.containsKey(new ResourceLocation(name))) {
+					//ret = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(name)));
+					ret = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(name)));
 				}
 				else {
 					if(player != null) {
@@ -164,8 +189,8 @@ public class StartItemContainer implements IStartItemContainer {
 					//}
 				//}
 				//if(meta > ret.getMaxDamage()) {
-				//if(meta > ret.getItem().getMaxDamage(ret)) {
-				if(meta > ret.getItem().getMaxDamage(ret) && !ret.getHasSubtypes()) {
+				if(meta > ret.getItem().getMaxDamage(ret)) {
+				//if(meta > ret.getItem().getMaxDamage(ret) && !ret.getHasSubtypes()) {
 				//if(meta > ret.getMaxDamage() && !metas.contains(meta)) {
 					//meta = ret.getMaxDamage();
 					meta = ret.getItem().getMaxDamage(ret);
@@ -178,11 +203,12 @@ public class StartItemContainer implements IStartItemContainer {
 					}
 				}
 				if(meta >= 0) {
-					ret.setItemDamage(meta);
+					//ret.setItemDamage(meta);
+					ret.setDamage(meta);
 				}
-				if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-					ret.setItemDamage(0);
-				}
+				//if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+					//ret.setItemDamage(0);
+				//}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -216,11 +242,11 @@ public class StartItemContainer implements IStartItemContainer {
 		this.count = count;
 	}
 	
-	@Override
-	public void setNumber(int number) {
+	//@Override
+	//public void setNumber(int number) {
 		// TODO Auto-generated method stub
-		this.number = number;
-	}
+		//this.number = number;
+	//}
 	
 	@Override
 	public boolean equals(Object obj) {

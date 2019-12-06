@@ -16,11 +16,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+//import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent.Serializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Messager implements IMessager {
 	
@@ -46,11 +48,13 @@ public class Messager implements IMessager {
 	//private static Logger log = LogManager.getLogger(ApiProps.MODID);
 	public static Logger log = LogManager.getLogger(ApiProps.MODID);
 	
-	public Messager(String json, int players, @Nullable EntityPlayer player) {
+	//public Messager(String json, int players, @Nullable EntityPlayer player) {
+	public Messager(String json, int players, @Nullable PlayerEntity player) {
 		Message = json;
 		if(player != null) {
 			//player.addChatMessage(Serializer.jsonToComponent(json));
-			player.sendMessage(Serializer.jsonToComponent(json));
+			//player.sendMessage(Serializer.jsonToComponent(json));
+			player.sendMessage(Serializer.fromJson(json));
 		}
 		Players = players;
 	}
@@ -60,11 +64,14 @@ public class Messager implements IMessager {
 		if(Players > 0) {
 			if(!e.getWorld().isRemote) {
 				Entity entity = e.getEntity();
-				if(entity instanceof EntityPlayer) {
-					EntityPlayer p = (EntityPlayer)entity;
+				//if(entity instanceof EntityPlayer) {
+				if(entity instanceof PlayerEntity) {
+					//EntityPlayer p = (EntityPlayer)entity;
+					PlayerEntity p = (PlayerEntity)entity;
 					try {
 						//p.addChatMessage(Serializer.jsonToComponent(Message));
-						p.sendMessage(Serializer.jsonToComponent(Message));
+						//p.sendMessage(Serializer.jsonToComponent(Message));
+						p.sendMessage(Serializer.fromJson(Message));
 					} catch (Exception e2) {
 						// TODO: handle exception
 						//ToMeSetupMod.logger.catching(e2);
@@ -95,13 +102,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendMessage(String msg, String mod, int players, EntityPlayer player) {
+	//public IMessager sendMessage(String msg, String mod, int players, EntityPlayer player) {
+	public IMessager sendMessage(String msg, String mod, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendMessage(msg, mod, players, player, null);
 	}
 	
 	@Override
-	public IMessager sendMessage(String msg, String mod, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendMessage(String msg, String mod, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendMessage(String msg, String mod, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		IMessager mess = new Messager(tooltip == null ? textToJson(msg, mod) : textToJson(msg, mod, tooltip), players, player);
 		MinecraftForge.EVENT_BUS.register(mess);
@@ -123,7 +132,8 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendMessageJson(String msg, int players, EntityPlayer player) {
+	//public IMessager sendMessageJson(String msg, int players, EntityPlayer player) {
+	public IMessager sendMessageJson(String msg, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		IMessager mess = new Messager(msg, players, player);
 		MinecraftForge.EVENT_BUS.register(mess);
@@ -144,13 +154,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendMissingBlock(String block, int players, EntityPlayer player) {
+	//public IMessager sendMissingBlock(String block, int players, EntityPlayer player) {
+	public IMessager sendMissingBlock(String block, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendMissingBlock(block, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendMissingBlock(String block, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendMissingBlock(String block, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendMissingBlock(String block, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + block + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -173,13 +185,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player) {
+	//public IMessager sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player) {
+	public IMessager sendMissingBlockOreDict(String oreDict, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendMissingBlockOreDict(oreDict, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendMissingBlockOreDict(String oreDict, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.oredict.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + oreDict + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -202,13 +216,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendBlockOreDictItem(String number, int players, EntityPlayer player) {
+	//public IMessager sendBlockOreDictItem(String number, int players, EntityPlayer player) {
+	public IMessager sendBlockOreDictItem(String number, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendBlockOreDictItem(number, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendBlockOreDictItem(String number, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendBlockOreDictItem(String number, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendBlockOreDictItem(String number, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.oredict.item\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + number + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -231,13 +247,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendMissingItem(String item, int players, EntityPlayer player) {
+	//public IMessager sendMissingItem(String item, int players, EntityPlayer player) {
+	public IMessager sendMissingItem(String item, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendMissingItem(item, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendMissingItem(String item, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendMissingItem(String item, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendMissingItem(String item, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + item + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -260,13 +278,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendMissingItemOreDict(String oreDict, int players, EntityPlayer player) {
+	//public IMessager sendMissingItemOreDict(String oreDict, int players, EntityPlayer player) {
+	public IMessager sendMissingItemOreDict(String oreDict, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendMissingItemOreDict(oreDict, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendMissingItemOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendMissingItemOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendMissingItemOreDict(String oreDict, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.oredict.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + oreDict + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -289,13 +309,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendExceededStackLimit(String number, int players, EntityPlayer player) {
+	//public IMessager sendExceededStackLimit(String number, int players, EntityPlayer player) {
+	public IMessager sendExceededStackLimit(String number, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendExceededStackLimit(number, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendExceededStackLimit(String number, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendExceededStackLimit(String number, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendExceededStackLimit(String number, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.number.exceeded\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + number + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -318,13 +340,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendExceededItemMeta(String number, int players, EntityPlayer player) {
+	//public IMessager sendExceededItemMeta(String number, int players, EntityPlayer player) {
+	public IMessager sendExceededItemMeta(String number, int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendExceededItemMeta(number, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
-	public IMessager sendExceededItemMeta(String number, int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendExceededItemMeta(String number, int players, EntityPlayer player, String tooltip) {
+	public IMessager sendExceededItemMeta(String number, int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.meta.exceeded\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + number + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -333,7 +357,7 @@ public class Messager implements IMessager {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.meta.exceeded\"},{\"text\":\"§4" + number + "!\"}]", players, player);
 		}
 	}
-	
+
 	@Override
 	public IMessager sendUnknownBlockError() {
 		// TODO Auto-generated method stub
@@ -347,13 +371,15 @@ public class Messager implements IMessager {
 	}
 	
 	@Override
-	public IMessager sendUnknownBlockError(int players, EntityPlayer player) {
+	//public IMessager sendUnknownBlockError(int players, EntityPlayer player) {
+	public IMessager sendUnknownBlockError(int players, PlayerEntity player) {
 		// TODO Auto-generated method stub
 		return sendUnknownBlockError(players, player, "Could be a bug or a configuration issue.");
 	}
 	
 	@Override
-	public IMessager sendUnknownBlockError(int players, EntityPlayer player, String tooltip) {
+	//public IMessager sendUnknownBlockError(int players, EntityPlayer player, String tooltip) {
+	public IMessager sendUnknownBlockError(int players, PlayerEntity player, String tooltip) {
 		// TODO Auto-generated method stub
 		if(enableTooltips && tooltip != null) {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.error.unknown\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
