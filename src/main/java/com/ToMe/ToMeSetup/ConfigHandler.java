@@ -174,7 +174,7 @@ public class ConfigHandler {
 		solidEnableOreDict = cfg.getBoolean("solid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a not Liquid Block. Dissable to Use the Registry Name.");
 		groundBlock = cfg.getString("ground2Replace", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is dissabled.");
 		liquidReplace = cfg.getString("liquid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is dissabled.");
-		solidReplace = cfg.getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is a Liquid Block and solid1EnableOreDict is dissabled.");
+		solidReplace = cfg.getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is dissabled.");
 		groundOreDict = cfg.getString("ground3OreDict", CATEGORY_WORLDSPAWN, "bedrock", "The OreDictinary Name with the Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is enabled.");
 		liquidOreDict = cfg.getString("liquid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is enabled.");
 		solidOreDict = cfg.getString("solid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is enabled.");
@@ -331,21 +331,21 @@ public class ConfigHandler {
 				if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Boolean) {
 					value = (Boolean) customDefaultValues.get(rule);
 				}
-				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " set?");
+				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " be set?");
 			}
 			else if(w.getGameRules().areSameType(rule, ValueType.NUMERICAL_VALUE)) {
 				int value = w.getGameRules().getInt(rule);
 				if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Integer) {
 					value = (Integer) customDefaultValues.get(rule);
 				}
-				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " set?");
+				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " be set?");
 			}
 			else if(w.getGameRules().areSameType(rule, ValueType.ANY_VALUE)) {
 				String value = w.getGameRules().getString(rule);
 				if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof String) {
 					value = (String) customDefaultValues.get(rule);
 				}
-				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " set?");
+				cfg.get(CATEGORY_GAMERULES, rule, value, "How should the Gamerule " + rule + " be set?");
 			}
 		}
 		initGamerules = false;

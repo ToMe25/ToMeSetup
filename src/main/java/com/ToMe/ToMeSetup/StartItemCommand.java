@@ -43,7 +43,11 @@ public class StartItemCommand extends CommandBase {
 		// TODO Auto-generated method stub
 		EntityPlayer player = null;
 		if(args.length == 0) {
-			player = getCommandSenderAsPlayer(sender);
+			//player = getCommandSenderAsPlayer(sender);
+			for(EntityPlayer p:server.getPlayerList().getPlayerList()) {
+				execute(server, sender, new String[] {p.getUniqueID().toString()});
+			}
+			return;
 		}
 		else {
 			player = getPlayer(server, sender, args[0]);

@@ -19,7 +19,7 @@ public interface IMessager {
 	 * Sends a Message to the Next 5 Joining Players and the Server Console(from ToMeSetup).
 	 * @param msg The Message to send to The Next 5 Joining Players and the Server Console.
 	 * @param msg Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessage(String msg);
 	
@@ -28,7 +28,7 @@ public interface IMessager {
 	 * @param msg The Message to send to The Next 5 Joining Players and the Server Console.
 	 * @param msg Format: text(not json)!
 	 * @param mod the mod to use as sender.(start of Message in dark red)
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessage(String msg, String mod);
 	
@@ -38,7 +38,7 @@ public interface IMessager {
 	 * @param msg Format: text(not json)!
 	 * @param mod the mod to use as sender.(start of Message in dark red)
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessage(String msg, String mod, int players);
 	
@@ -49,7 +49,7 @@ public interface IMessager {
 	 * @param mod the mod to use as sender.(start of Message in dark red)
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessage(String msg, String mod, int players, @Nullable EntityPlayer player);
 	
@@ -62,7 +62,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessage(String msg, String mod, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -70,7 +70,7 @@ public interface IMessager {
 	 * Sends a Message to the Next 5 Joining Players and the Server Console.
 	 * @param msg The Message to send to The Next 5 Joining Players and the Server Console.
 	 * @param msg Format: json!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessageJson(String msg);
 	
@@ -79,7 +79,7 @@ public interface IMessager {
 	 * @param msg The Message to send to The Next 5 Joining Players and the Server Console.
 	 * @param msg Format: json!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessageJson(String msg, int players);
 	
@@ -89,7 +89,7 @@ public interface IMessager {
 	 * @param msg Format: json!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMessageJson(String msg, int players, @Nullable EntityPlayer player);
 	
@@ -98,7 +98,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param block the missing Block!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlock(String block);
 	
@@ -108,7 +108,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param block the missing Block!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlock(String block, int players);
 	
@@ -119,7 +119,7 @@ public interface IMessager {
 	 * @param block the missing Block!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlock(String block, int players, @Nullable EntityPlayer player);
 	
@@ -132,7 +132,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlock(String block, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -141,7 +141,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param oreDict the missing Block OreDict!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlockOreDict(String oreDict);
 	
@@ -151,7 +151,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param oreDict the missing Block OreDict!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlockOreDict(String oreDict, int players);
 	
@@ -162,7 +162,7 @@ public interface IMessager {
 	 * @param oreDict the missing Block OreDict!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable EntityPlayer player);
 	
@@ -175,7 +175,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingBlockOreDict(String oreDict, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -184,7 +184,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the missing Block Number!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendBlockOreDictItem(String number);
 	
@@ -194,7 +194,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the missing Block Number!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendBlockOreDictItem(String number, int players);
 	
@@ -205,7 +205,7 @@ public interface IMessager {
 	 * @param number the missing Block Number!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendBlockOreDictItem(String number, int players, @Nullable EntityPlayer player);
 	
@@ -218,7 +218,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendBlockOreDictItem(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -227,7 +227,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param item the missing Item!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItem(String item);
 	
@@ -237,7 +237,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param item the missing Item!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItem(String item, int players);
 	
@@ -248,7 +248,7 @@ public interface IMessager {
 	 * @param item the missing Item!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItem(String item, int players, @Nullable EntityPlayer player);
 	
@@ -261,7 +261,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItem(String item, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -270,7 +270,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param oreDict the missing Item OreDict!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItemOreDict(String oreDict);
 	
@@ -280,7 +280,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param oreDict the missing Item OreDict!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItemOreDict(String oreDict, int players);
 	
@@ -291,7 +291,7 @@ public interface IMessager {
 	 * @param oreDict the missing Item OreDict!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable EntityPlayer player);
 	
@@ -304,7 +304,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendMissingItemOreDict(String oreDict, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -313,7 +313,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the tried Item Number!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededStackLimit(String number);
 	
@@ -323,7 +323,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the tried Item Number!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededStackLimit(String number, int players);
 	
@@ -334,7 +334,7 @@ public interface IMessager {
 	 * @param number the tried Item Number!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededStackLimit(String number, int players, @Nullable EntityPlayer player);
 	
@@ -347,7 +347,7 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededStackLimit(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
@@ -356,7 +356,7 @@ public interface IMessager {
 	 * With the Tooltip "Probably not a Bug(most likely its a Config issue)!"!
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the tried Item Number!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededItemMeta(String number);
 	
@@ -366,7 +366,7 @@ public interface IMessager {
 	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
 	 * @param number the tried Item Number!
 	 * @param players how many Players will get The Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededItemMeta(String number, int players);
 	
@@ -377,7 +377,7 @@ public interface IMessager {
 	 * @param number the tried Item Number!
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededItemMeta(String number, int players, @Nullable EntityPlayer player);
 	
@@ -390,9 +390,48 @@ public interface IMessager {
 	 * @param player an additional player to send the Message.
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
-	 * @return
+	 * @return the message
 	 */
 	IMessager sendExceededItemMeta(String number, int players, @Nullable EntityPlayer player, @Nullable String tooltip);
+	
+	/**
+	 * Sends a Message to the Next 5 Joining Players and the Server Console that says an unknown error occurred while replacing a block.
+	 * With the Tooltip "Could be a bug or a configuration issue."!
+	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
+	 * @return the message
+	 */
+	IMessager sendUnknownBlockError();
+	
+	/**
+	 * Sends a Message to the Next Joining Players and the Server Console that says an unknown error occurred while replacing a block.
+	 * With the Tooltip "Could be a bug or a configuration issue."!
+	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
+	 * @param players how many Players will get The Message.
+	 * @return the message
+	 */
+	IMessager sendUnknownBlockError(int players);
+	
+	/**
+	 * Sends a Message to the Next Joining Players and the Server Console that says an unknown error occurred while replacing a block.
+	 * With the Tooltip "Could be a bug or a configuration issue."!
+	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
+	 * @param players how many Players will get The Message.
+	 * @param player an additional player to send the Message.
+	 * @return the message
+	 */
+	IMessager sendUnknownBlockError(int players, @Nullable EntityPlayer player);
+	
+	/**
+	 * Sends a Message to the Next Joining Players and the Server Console that says an unknown error occurred while replacing a block.
+	 * With a custom Tooltip!
+	 * The Tooltip will be only visible if "enableErrorTooltips" is enabled in the Server Config File!
+	 * @param players how many Players will get The Message.
+	 * @param player an additional player to send the Message.
+	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
+	 * @param tooltip Format: text(not json)!
+	 * @return the message
+	 */
+	IMessager sendUnknownBlockError(int players, @Nullable EntityPlayer player, @Nullable String tooltip);
 	
 	/**
 	 * Converts a text to a json to print in Chat(for mod from the implementing class).
