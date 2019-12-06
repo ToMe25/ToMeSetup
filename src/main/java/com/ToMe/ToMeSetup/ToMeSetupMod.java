@@ -606,7 +606,7 @@ public class ToMeSetupMod {
 						//registerMessager(new Messager("Could not Find any Item in the OreDictionary Named " + oreDictName + "!"));
 						//TODO Rebuild after a Test!
 						//Messager.sendMissingBlockOreDict(oreDictName);
-						mess.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+						mess.sendMissingBlockOreDict(oreDictName);
 						ret = true;
 					}
 				}
@@ -631,7 +631,7 @@ public class ToMeSetupMod {
 						//MinecraftForge.EVENT_BUS.register(new Messager("Could not Find Block Named " + registryName + "!"));
 						//registerMessager(new Messager("Could not Find Block Named " + registryName + "!"));
 						//Messager.sendMissingBlock(registryName);
-						mess.sendBlockOreDictItem(oreDictName + ":" + oreDictNumber);
+						mess.sendMissingBlock(registryName);
 						ret = true;
 					}
 				}
@@ -642,7 +642,8 @@ public class ToMeSetupMod {
 			//registerMessager(new Messager("An Unknown Error occures while Replacing a Block!"));
 			//Messager.sendMessage("An Unknown Error occures while Replacing a Block!");
 			//Messager.sendMessage("An Unknown Error occures while Replacing a Block!", 5, null, "Maybe its a Bug?");
-			mess.sendMessage("An Unknown Error occures while Replacing a Block!", "ToMeSetup", 5, null, "Maybe its a Bug?");
+			//mess.sendMessage("An Unknown Error occures while Replacing a Block!", "ToMeSetup", 5, null, "Maybe its a Bug?");
+			mess.sendUnknownBlockError();
 			logger.catching(e);
 		}
 		return ret;

@@ -39,6 +39,7 @@ public class Messager implements IMessager {
 	 * The Translation Map for Server side things because Forge only works at Client.
 	 */
 	protected static HashMap<String, String> en_us_lang;
+	private static final String CONFIG_ISSUE = "Probably not a Bug(most likely its a Config issue)!";
 	
 	public static boolean enableTooltips = true;
 	
@@ -133,19 +134,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendMissingBlock(String block) {
 		// TODO Auto-generated method stub
-		return sendMissingBlock(block, 5, null, null);
+		return sendMissingBlock(block, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingBlock(String block, int players) {
 		// TODO Auto-generated method stub
-		return sendMissingBlock(block, players, null, null);
+		return sendMissingBlock(block, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingBlock(String block, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendMissingBlock(block, players, player, null);
+		return sendMissingBlock(block, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -162,19 +163,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendMissingBlockOreDict(String oreDict) {
 		// TODO Auto-generated method stub
-		return sendMissingBlockOreDict(oreDict, 5, null, null);
+		return sendMissingBlockOreDict(oreDict, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingBlockOreDict(String oreDict, int players) {
 		// TODO Auto-generated method stub
-		return sendMissingBlockOreDict(oreDict, players, null, null);
+		return sendMissingBlockOreDict(oreDict, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendMissingBlockOreDict(oreDict, players, player, null);
+		return sendMissingBlockOreDict(oreDict, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -191,19 +192,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendBlockOreDictItem(String number) {
 		// TODO Auto-generated method stub
-		return sendBlockOreDictItem(number, 5, null, null);
+		return sendBlockOreDictItem(number, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendBlockOreDictItem(String number, int players) {
 		// TODO Auto-generated method stub
-		return sendBlockOreDictItem(number, players, null, null);
+		return sendBlockOreDictItem(number, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendBlockOreDictItem(String number, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendBlockOreDictItem(number, players, player, null);
+		return sendBlockOreDictItem(number, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -220,19 +221,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendMissingItem(String item) {
 		// TODO Auto-generated method stub
-		return sendMissingItem(item, 5, null, null);
+		return sendMissingItem(item, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingItem(String item, int players) {
 		// TODO Auto-generated method stub
-		return sendMissingItem(item, players, null, null);
+		return sendMissingItem(item, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingItem(String item, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendMissingItem(item, players, player, null);
+		return sendMissingItem(item, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -249,19 +250,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendMissingItemOreDict(String oreDict) {
 		// TODO Auto-generated method stub
-		return sendMissingItemOreDict(oreDict, 5, null, null);
+		return sendMissingItemOreDict(oreDict, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingItemOreDict(String oreDict, int players) {
 		// TODO Auto-generated method stub
-		return sendMissingItemOreDict(oreDict, players, null, null);
+		return sendMissingItemOreDict(oreDict, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendMissingItemOreDict(String oreDict, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendMissingItemOreDict(oreDict, players, player, null);
+		return sendMissingItemOreDict(oreDict, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -278,19 +279,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendExceededStackLimit(String number) {
 		// TODO Auto-generated method stub
-		return sendExceededStackLimit(number, 5, null, null);
+		return sendExceededStackLimit(number, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendExceededStackLimit(String number, int players) {
 		// TODO Auto-generated method stub
-		return sendExceededStackLimit(number, players, null, null);
+		return sendExceededStackLimit(number, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendExceededStackLimit(String number, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendExceededStackLimit(number, players, player, null);
+		return sendExceededStackLimit(number, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -307,19 +308,19 @@ public class Messager implements IMessager {
 	@Override
 	public IMessager sendExceededItemMeta(String number) {
 		// TODO Auto-generated method stub
-		return sendExceededItemMeta(number, 5, null, null);
+		return sendExceededItemMeta(number, 5, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendExceededItemMeta(String number, int players) {
 		// TODO Auto-generated method stub
-		return sendExceededItemMeta(number, players, null, null);
+		return sendExceededItemMeta(number, players, null, CONFIG_ISSUE);
 	}
 	
 	@Override
 	public IMessager sendExceededItemMeta(String number, int players, EntityPlayer player) {
 		// TODO Auto-generated method stub
-		return sendExceededItemMeta(number, players, player, null);
+		return sendExceededItemMeta(number, players, player, CONFIG_ISSUE);
 	}
 	
 	@Override
@@ -330,6 +331,35 @@ public class Messager implements IMessager {
 		}
 		else {
 			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.meta.exceeded\"},{\"text\":\"§4" + number + "!\"}]", players, player);
+		}
+	}
+	
+	@Override
+	public IMessager sendUnknownBlockError() {
+		// TODO Auto-generated method stub
+		return sendUnknownBlockError(5, null, "Could be a bug or a configuration issue.");
+	}
+	
+	@Override
+	public IMessager sendUnknownBlockError(int players) {
+		// TODO Auto-generated method stub
+		return sendUnknownBlockError(players, null, "Could be a bug or a configuration issue.");
+	}
+	
+	@Override
+	public IMessager sendUnknownBlockError(int players, EntityPlayer player) {
+		// TODO Auto-generated method stub
+		return sendUnknownBlockError(players, player, "Could be a bug or a configuration issue.");
+	}
+	
+	@Override
+	public IMessager sendUnknownBlockError(int players, EntityPlayer player, String tooltip) {
+		// TODO Auto-generated method stub
+		if(enableTooltips && tooltip != null) {
+			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.error.unknown\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
+		}
+		else {
+			return sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.error.unknown\"}]", players, player);
 		}
 	}
 	
@@ -468,6 +498,7 @@ public class Messager implements IMessager {
 			en_us_lang.put("tomesetup.block.missing", "§4Could not Find a Block Named ");
 			en_us_lang.put("tomesetup.block.oredict.missing", "§4Could not Find a Block with the OreDict Name ");
 			en_us_lang.put("tomesetup.block.oredict.item", "§4Could only Find a Item, at OreDict:Number ");
+			en_us_lang.put("tomesetup.block.error.unknown", "§4An Unknown Error occurred while Replacing a Block!");
 			en_us_lang.put("tomesetup.item.missing", "§4Could not Find a Item Named ");
 			en_us_lang.put("tomesetup.item.oredict.missing", "§4Could not Find a Item with the OreDict Name ");
 			en_us_lang.put("tomesetup.item.number.exceeded", "§4The Tried Item count was higher than the stack Limit of that Item, it was ");
