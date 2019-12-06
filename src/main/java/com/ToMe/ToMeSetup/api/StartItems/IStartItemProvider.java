@@ -2,10 +2,12 @@ package com.ToMe.ToMeSetup.api.StartItems;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+//import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+//import net.minecraftforge.event.entity.player.PlayerEvent;
+//import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+//import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public interface IStartItemProvider {
 	
@@ -23,7 +25,8 @@ public interface IStartItemProvider {
 	 * @param player it will send error messages to this player.
 	 * @return returns a list of all Start Items
 	 */
-	List<ItemStack> getStartItems(EntityPlayer player);
+	//List<ItemStack> getStartItems(EntityPlayer player);
+	List<ItemStack> getStartItems(PlayerEntity player);
 	
 	/**
 	 * Gets the Start Items from Config.
@@ -31,7 +34,8 @@ public interface IStartItemProvider {
 	 * @param player if this is not a check it will send error messages to this player.
 	 * @return returns a list of all Start Items
 	 */
-	List<ItemStack> getStartItems(EntityPlayer player, boolean check);
+	//List<ItemStack> getStartItems(EntityPlayer player, boolean check);
+	List<ItemStack> getStartItems(PlayerEntity player, boolean check);
 	
 	///**
 	// * Adds the given String to the List of StartItems.
@@ -67,9 +71,9 @@ public interface IStartItemProvider {
 	void validateStartItems();
 	
 	//@SubscribeEvent
-	void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e);
+	//void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e);
 	
 	//@SubscribeEvent
-	void onPlayerRespawns(PlayerEvent.PlayerRespawnEvent e);
+	//void onPlayerRespawns(PlayerEvent.PlayerRespawnEvent e);
 	
 }

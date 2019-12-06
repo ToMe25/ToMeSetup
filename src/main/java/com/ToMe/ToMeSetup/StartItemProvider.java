@@ -1,20 +1,28 @@
 package com.ToMe.ToMeSetup;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+//import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
+//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+//import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+//import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+//import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+//import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.oredict.OreDictionary;
+//import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Deprecated
 public class StartItemProvider {
@@ -89,13 +97,16 @@ public class StartItemProvider {
 	@SubscribeEvent
 	public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
 		if(ConfigHandler.enableStartItems) {
-			NBTTagCompound playerData = e.player.getEntityData();
-			NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+			//NBTTagCompound playerData = e.player.getEntityData();
+			//NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
+			CompoundNBT data = e.getPlayer().getPersistentData();
 			if(!data.getBoolean(GOT_START_ITEMS)) {
 				//for(ItemStack itm:getStartItems()) {
-				for(ItemStack itm:getStartItems(e.player)) {
+				//for(ItemStack itm:getStartItems(e.player)) {
+				for(ItemStack itm:getStartItems(e.getPlayer())) {
 					try {
-						ItemHandlerHelper.giveItemToPlayer(e.player, itm);
+						//ItemHandlerHelper.giveItemToPlayer(e.player, itm);
+						ItemHandlerHelper.giveItemToPlayer(e.getPlayer(), itm);
 					} catch (Exception e2) {
 						// TODO: handle exception
 						ToMeSetupMod.logger.catching(e2);
@@ -183,8 +194,10 @@ public class StartItemProvider {
 					}
 				}*/
 				//ItemHandlerHelper.giveItemToPlayer(e.player, new ItemStack(Items.APPLE));
-				data.setBoolean(GOT_START_ITEMS, true);
-				playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+				//data.setBoolean(GOT_START_ITEMS, true);
+				data.putBoolean(GOT_START_ITEMS, true);
+				//playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
+				//playerData.setTag(PlayerEntity.PERSISTED_NBT_TAG, data);
 				//System.out.println("StartItemsGiven");
 			}
 		}
@@ -194,9 +207,11 @@ public class StartItemProvider {
 	public void onPlayerRespawns(PlayerEvent.PlayerRespawnEvent e) {
 		if(ConfigHandler.enableStartItems && ConfigHandler.startItemsOnRespawn) {
 			//for(ItemStack itm:getStartItems()) {
-			for(ItemStack itm:getStartItems(e.player)) {
+			//for(ItemStack itm:getStartItems(e.player)) {
+			for(ItemStack itm:getStartItems(e.getPlayer())) {
 				try {
-					ItemHandlerHelper.giveItemToPlayer(e.player, itm);
+					//ItemHandlerHelper.giveItemToPlayer(e.player, itm);
+					ItemHandlerHelper.giveItemToPlayer(e.getPlayer(), itm);
 				} catch (Exception e2) {
 					// TODO: handle exception
 					ToMeSetupMod.logger.catching(e2);
@@ -277,11 +292,15 @@ public class StartItemProvider {
 		}
 	}
 	
-	public static NBTTagCompound getTag(NBTTagCompound tag, String key) {
-		if(tag == null || !tag.hasKey(key)) {
-			return new NBTTagCompound();
+	//public static NBTTagCompound getTag(NBTTagCompound tag, String key) {
+	public static CompoundNBT getTag(CompoundNBT tag, String key) {
+		//if(tag == null || !tag.hasKey(key)) {
+		if(tag == null || !tag.contains(key)) {
+			//return new NBTTagCompound();
+			return new CompoundNBT();
 		}
-		return tag.getCompoundTag(key);
+		//return tag.getCompoundTag(key);
+		return tag.getCompound(key);
 	}
 	
 	/**
@@ -300,7 +319,8 @@ public class StartItemProvider {
 	 * @param player it will send error messages to this player.
 	 * @return a list of the start Items.
 	 */
-	private static ArrayList<ItemStack> getStartItems(EntityPlayer player) {
+	//private static ArrayList<ItemStack> getStartItems(EntityPlayer player) {
+	private static ArrayList<ItemStack> getStartItems(PlayerEntity player) {
 		return getStartItems(false, player);
 	}
 	
@@ -312,7 +332,8 @@ public class StartItemProvider {
 	 */
 	//private static ArrayList<ItemStack> getStartItems() {
 	//private static ArrayList<ItemStack> getStartItems(boolean check) {
-	private static ArrayList<ItemStack> getStartItems(boolean check, EntityPlayer player) {
+	//private static ArrayList<ItemStack> getStartItems(boolean check, EntityPlayer player) {
+	private static ArrayList<ItemStack> getStartItems(boolean check, PlayerEntity player) {
 		ArrayList<ItemStack> aitemstack = new ArrayList<ItemStack>();
 		int i = 0;
 		while(i < ConfigHandler.StartItems.length) {
@@ -325,9 +346,11 @@ public class StartItemProvider {
 					//}
 					//ItemStack itm = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)), 1, ConfigHandler.StartItemMetas[i]);
 					//ItemStack itm = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)), 1, Meta);
-					ItemStack itm = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)), 1, 0);
+					//ItemStack itm = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)), 1, 0);
+					ItemStack itm = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)), 1);
 					//int Meta = 0;
-					int Meta = itm.getItemDamage();
+					//int Meta = itm.getItemDamage();
+					int Meta = itm.getDamage();
 					if(ConfigHandler.StartItemMetas.length > i) {
 						//Meta = ConfigHandler.StartItemMetas[i];
 						//if(ConfigHandler.StartItemMetas[i] <= itm.getMaxDamage()) {
@@ -347,7 +370,8 @@ public class StartItemProvider {
 							}
 						}
 					}
-					itm.setItemDamage(Meta);
+					//itm.setItemDamage(Meta);
+					itm.setDamage(Meta);
 					int Count = 1;
 					if(ConfigHandler.StartItemCounts.length > i) {
 						//Count = ConfigHandler.StartItemCounts[i];
@@ -404,23 +428,50 @@ public class StartItemProvider {
 		while(i < ConfigHandler.StartItemOreDicts.length) {
 			try {
 				String OreDictName = ConfigHandler.StartItemOreDicts[i];
-				List<ItemStack> ores = OreDictionary.getOres(OreDictName);
-				if(!ores.isEmpty()) {
-					ItemStack itm = null;
+				//List<ItemStack> ores = OreDictionary.getOres(OreDictName);
+				//Collection<Item> ores = ItemTags.getCollection().get(new ResourceLocation("forge", ToMeSetupMod.parseOreDict(OreDictName))).getAllElements();
+				//Collection<Item> ores = ItemTags.getCollection().get(new ResourceLocation(ToMeSetupMod.parseOreDict(OreDictName))).getAllElements();
+				Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation(ToMeSetupMod.parseOreDict(OreDictName)));
+				Collection<Item> ores;
+				//if(!ores.isEmpty()) {
+				if(tag != null && !(ores = tag.getAllElements()).isEmpty()) {
+					ItemStack itm = new ItemStack(ores.iterator().next());
+					//ItemStack itm = null;
 					/*if(ConfigHandler.StartItemOreDictNumbers[i] < ores.size()) {
 						itm = ores.get(ConfigHandler.StartItemOreDictNumbers[i]).copy();
 					}*/
-					if(ConfigHandler.StartItemOreDictNumbers.length > i) {
-						if(ConfigHandler.StartItemOreDictNumbers[i] < ores.size()) {
-							itm = ores.get(ConfigHandler.StartItemOreDictNumbers[i]).copy();
-						}
-						else {
-							itm = ores.get(ores.size() - 1).copy();
-						}
-					}
-					else {
-						itm = ores.get(ores.size() - 1).copy();
-					}
+					//if(ConfigHandler.StartItemOreDictNumbers.length > i) {
+						//if(ConfigHandler.StartItemOreDictNumbers[i] < ores.size()) {
+							//itm = ores.get(ConfigHandler.StartItemOreDictNumbers[i]).copy();
+							//int nr = 0;
+							//for(Item item:ores) {
+								//if(nr == ConfigHandler.StartItemOreDictNumbers[i]) {
+									//itm = new ItemStack(item, 1);
+								//}
+								//nr++;
+							//}
+						//}
+						//else {
+							//itm = ores.get(ores.size() - 1).copy();
+							//int nr = 0;
+							//for(Item item:ores) {
+								//if(nr == ores.size() - 1) {
+									//itm = new ItemStack(item, 1);
+								//}
+								//nr++;
+							//}
+						//}
+					//}
+					//else {
+						//itm = ores.get(ores.size() - 1).copy();
+						//int nr = 0;
+						//for(Item item:ores) {
+							//if(nr == ores.size() - 1) {
+								//itm = new ItemStack(item, 1);
+							//}
+							//nr++;
+						//}
+					//}
 					//if(ConfigHandler.StartItemOreDictMetas.length > i) {
 						//if(ConfigHandler.StartItemOreDictMetas[i] >= 0) {
 							//itm.setItemDamage(ConfigHandler.StartItemOreDictMetas[i]);
@@ -429,27 +480,29 @@ public class StartItemProvider {
 					//if(ConfigHandler.StartItemOreDictMetas[i] > 0) {
 						//itm.setItemDamage(ConfigHandler.StartItemOreDictMetas[i]);
 					//}
-					if(itm.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-						itm.setItemDamage(0);
-					}
+					//if(itm.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+						//itm.setItemDamage(0);
+					//}
 					//int Meta = 0;
-					int Meta = itm.getItemDamage();
-					if(ConfigHandler.StartItemOreDictMetas.length > i) {
-						if(ConfigHandler.StartItemOreDictMetas[i] >= 0) {
-							if(ConfigHandler.StartItemOreDictMetas[i] <= itm.getMaxDamage()) {
-								Meta = ConfigHandler.StartItemOreDictMetas[i];
-							}
-							else {
-								if(!check) {
-									Messager.sendExceededItemMeta("" + ConfigHandler.StartItemOreDictMetas[i], 0, player);
-								}
-								else {
-									Messager.sendExceededItemMeta("" + ConfigHandler.StartItemOreDictMetas[i], 6);
-								}
-							}
-						}
-					}
-					itm.setItemDamage(Meta);
+					//int Meta = itm.getItemDamage();
+					//int Meta = itm.getDamage();
+					//if(ConfigHandler.StartItemOreDictMetas.length > i) {
+						//if(ConfigHandler.StartItemOreDictMetas[i] >= 0) {
+							//if(ConfigHandler.StartItemOreDictMetas[i] <= itm.getMaxDamage()) {
+								//Meta = ConfigHandler.StartItemOreDictMetas[i];
+							//}
+							//else {
+								//if(!check) {
+									//Messager.sendExceededItemMeta("" + ConfigHandler.StartItemOreDictMetas[i], 0, player);
+								//}
+								//else {
+									//Messager.sendExceededItemMeta("" + ConfigHandler.StartItemOreDictMetas[i], 6);
+								//}
+							//}
+						//}
+					//}
+					//itm.setItemDamage(Meta);
+					//itm.setDamage(Meta);
 					int Count = 1;
 					if(ConfigHandler.StartItemOreDictCounts.length > i) {
 						//Count = ConfigHandler.StartItemOreDictCounts[i];

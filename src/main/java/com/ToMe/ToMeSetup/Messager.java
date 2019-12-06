@@ -1,7 +1,7 @@
 package com.ToMe.ToMeSetup;
 
 import java.util.HashMap;
-import java.util.List;
+//import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
@@ -12,15 +12,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.player.PlayerEntity;
+//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent.Serializer;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.util.text.translation.LanguageMap;
+//import net.minecraft.util.text.translation.I18n;
+//import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import scala.util.parsing.json.JSONObject;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+//import scala.util.parsing.json.JSONObject;
 
 @Deprecated
 public class Messager {
@@ -89,10 +91,12 @@ public class Messager {
 	 * @param player an additional player to send the Message.
 	 * @param player can be null!
 	 */
-	public Messager(String json, int players, @Nullable EntityPlayer player) {
+	//public Messager(String json, int players, @Nullable EntityPlayer player) {
+	public Messager(String json, int players, @Nullable PlayerEntity player) {
 		Message = json;
 		if(player != null) {
-			player.sendMessage(Serializer.jsonToComponent(json));
+			//player.sendMessage(Serializer.jsonToComponent(json));
+			player.sendMessage(Serializer.fromJson(json));
 			//player.addChatMessage(Serializer.jsonToComponent(json));
 		}
 		Players = players;
@@ -126,7 +130,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendMessage(String msg, int players, EntityPlayer player) {
+	//public static void sendMessage(String msg, int players, EntityPlayer player) {
+	public static void sendMessage(String msg, int players, PlayerEntity player) {
 		MinecraftForge.EVENT_BUS.register(new Messager(textToJson(msg), players, player));
 		ToMeSetupMod.logger.error(msg);
 	}
@@ -140,7 +145,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendMessage(String msg, int players, EntityPlayer player, String tooltip) {
+	//public static void sendMessage(String msg, int players, EntityPlayer player, String tooltip) {
+	public static void sendMessage(String msg, int players, PlayerEntity player, String tooltip) {
 		MinecraftForge.EVENT_BUS.register(new Messager(textToJson(msg, tooltip), players, player));
 		ToMeSetupMod.logger.error(msg);
 	}
@@ -175,7 +181,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendMessageJson(String msg, int players, EntityPlayer player) {
+	//public static void sendMessageJson(String msg, int players, EntityPlayer player) {
+	public static void sendMessageJson(String msg, int players, PlayerEntity player) {
 		MinecraftForge.EVENT_BUS.register(new Messager(msg, players, player));
 		loggJSON(msg);
 		//ToMeSetupMod.logger.error(new msg);
@@ -224,7 +231,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendMissingBlock(String block, int players, EntityPlayer player) {
+	//public static void sendMissingBlock(String block, int players, EntityPlayer player) {
+	public static void sendMissingBlock(String block, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"block.missing\"},{\"text\":\"§4" + block + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.missing\"},{\"text\":\"§4" + block + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -245,7 +253,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendMissingBlock(String block, int players, EntityPlayer player, String tooltip) {
+	//public static void sendMissingBlock(String block, int players, EntityPlayer player, String tooltip) {
+	public static void sendMissingBlock(String block, int players, PlayerEntity player, String tooltip) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"},{\"text\":\"§4" + block + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + block + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
@@ -298,7 +307,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player) {
+	//public static void sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player) {
+	public static void sendMissingBlockOreDict(String oreDict, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"block.oredict.missing\"},{\"text\":\"§4" + oreDict + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.oredict.missing\"},{\"text\":\"§4" + oreDict + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -319,7 +329,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	//public static void sendMissingBlockOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	public static void sendMissingBlockOreDict(String oreDict, int players, PlayerEntity player, String tooltip) {
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.oredict.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + oreDict + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		}
@@ -371,7 +382,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendBlockOreDictItem(String number, int players, EntityPlayer player) {
+	//public static void sendBlockOreDictItem(String number, int players, EntityPlayer player) {
+	public static void sendBlockOreDictItem(String number, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"block.oredict.missing\"},{\"text\":\"§4" + oreDict + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.oredict.missing\"},{\"text\":\"§4" + oreDict + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -392,7 +404,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendBlockOreDictItem(String number, int players, EntityPlayer player, String tooltip) {
+	//public static void sendBlockOreDictItem(String number, int players, EntityPlayer player, String tooltip) {
+	public static void sendBlockOreDictItem(String number, int players, PlayerEntity player, String tooltip) {
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.block.oredict.item\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + number + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		}
@@ -444,7 +457,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendMissingItem(String item, int players, EntityPlayer player) {
+	//public static void sendMissingItem(String item, int players, EntityPlayer player) {
+	public static void sendMissingItem(String item, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"item.missing\"},{\"text\":\"§4" + item + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.missing\"},{\"text\":\"§4" + item + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -465,7 +479,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendMissingItem(String item, int players, EntityPlayer player, String tooltip) {
+	//public static void sendMissingItem(String item, int players, EntityPlayer player, String tooltip) {
+	public static void sendMissingItem(String item, int players, PlayerEntity player, String tooltip) {
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + item + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		}
@@ -517,7 +532,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendMissingItemOreDict(String oreDict, int players, EntityPlayer player) {
+	//public static void sendMissingItemOreDict(String oreDict, int players, EntityPlayer player) {
+	public static void sendMissingItemOreDict(String oreDict, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"item.oredict.missing\"},{\"text\":\"§4" + oreDict + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.oredict.missing\"},{\"text\":\"§4" + oreDict + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -538,7 +554,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendMissingItemOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	//public static void sendMissingItemOreDict(String oreDict, int players, EntityPlayer player, String tooltip) {
+	public static void sendMissingItemOreDict(String oreDict, int players, PlayerEntity player, String tooltip) {
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.oredict.missing\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + oreDict + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		}
@@ -590,7 +607,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendExceededStackLimit(String number, int players, EntityPlayer player) {
+	//public static void sendExceededStackLimit(String number, int players, EntityPlayer player) {
+	public static void sendExceededStackLimit(String number, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"item.number.exceeded\"},{\"text\":\"§4" + number + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.number.exceeded\"},{\"text\":\"§4" + number + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -611,7 +629,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendExceededStackLimit(String number, int players, EntityPlayer player, String tooltip) {
+	//public static void sendExceededStackLimit(String number, int players, EntityPlayer player, String tooltip) {
+	public static void sendExceededStackLimit(String number, int players, PlayerEntity player, String tooltip) {
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.number.exceeded\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + number + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		}
@@ -663,7 +682,8 @@ public class Messager {
 	 * @param players how many Players will get The Message.
 	 * @param player an additional player to send the Message.
 	 */
-	public static void sendExceededItemMeta(String number, int players, EntityPlayer player) {
+	//public static void sendExceededItemMeta(String number, int players, EntityPlayer player) {
+	public static void sendExceededItemMeta(String number, int players, PlayerEntity player) {
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"item.number.exceeded\"},{\"text\":\"§4" + number + "!\"}]", players, player);
 		//sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.number.exceeded\"},{\"text\":\"§4" + number + "!\"}]", players, player);
 		if(ConfigHandler.enableTooltips) {
@@ -684,7 +704,8 @@ public class Messager {
 	 * @param tooltip a tooltip that will be send to the players(Console not) if the Config "enableErrorTooltips" is set to true.
 	 * @param tooltip Format: text(not json)!
 	 */
-	public static void sendExceededItemMeta(String number, int players, EntityPlayer player, String tooltip) {
+	//public static void sendExceededItemMeta(String number, int players, EntityPlayer player, String tooltip) {
+	public static void sendExceededItemMeta(String number, int players, PlayerEntity player, String tooltip) {
 		if(ConfigHandler.enableTooltips) {
 			sendMessageJson("[{\"text\":\"§cToMeSetup: \"},{\"translate\":\"tomesetup.item.meta.exceeded\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}},{\"text\":\"§4" + number + "!\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"" + tooltip + "\"}}]", players, player);
 		}
@@ -698,8 +719,10 @@ public class Messager {
 		if(Players > 0) {
 			if(!e.getWorld().isRemote) {
 				Entity entity = e.getEntity();
-				if(entity instanceof EntityPlayer) {
-					EntityPlayer p = (EntityPlayer)entity;
+				//if(entity instanceof EntityPlayer) {
+				if(entity instanceof PlayerEntity) {
+					//EntityPlayer p = (EntityPlayer)entity;
+					PlayerEntity p = (PlayerEntity)entity;
 					//p.sendMessage(Serializer.jsonToComponent("{\"text\":\"§cToMeSetup: §4" + Message + "\"}"));
 					//p.addChatMessage(Serializer.jsonToComponent("{\"text\":\"§cToMeSetup: §4" + Message + "\"}"));
 					//Players -= 1;
@@ -708,7 +731,8 @@ public class Messager {
 					//p.sendMessage(Serializer.jsonToComponent(Message));
 					//p.addChatMessage(Serializer.jsonToComponent(Message));
 					try {
-						p.sendMessage(Serializer.jsonToComponent(Message));
+						//p.sendMessage(Serializer.jsonToComponent(Message));
+						p.sendMessage(Serializer.fromJson(Message));
 						//p.addChatMessage(Serializer.jsonToComponent(Message));
 					} catch (Exception e2) {
 						// TODO: handle exception

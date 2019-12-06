@@ -2,7 +2,9 @@ package com.ToMe.ToMeSetup.api.StartItems;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+
+//import net.minecraft.entity.player.EntityPlayer;
 
 //import java.util.List;
 
@@ -28,7 +30,8 @@ public interface IStartItemContainer {
 	 * @param player the player that will get the error Messages. If null the errors will be send to the next 6 Joining/Respawning Players
 	 * @return
 	 */
-	ItemStack getItem(@Nullable EntityPlayer player);
+	//ItemStack getItem(@Nullable EntityPlayer player);
+	ItemStack getItem(@Nullable PlayerEntity player);
 	
 	/**
 	 * sets the Item Name or oreDict to the given String.
@@ -53,6 +56,6 @@ public interface IStartItemContainer {
 	 * sets the Number of that Item in the List of all Items registered with this OreDictionary Name
 	 * @param number
 	 */
-	void setNumber(int number);
+	//void setNumber(int number);
 	
 }
