@@ -5,7 +5,7 @@
   "description": "ToMe25(0)'s Setup Mod.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/tomesetup",
   "updateUrl": "",
   "authorList": ["ToMe25"],
   "credits": "...",
