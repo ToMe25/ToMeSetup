@@ -74,10 +74,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'tomesetup', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                examplemod {
+                tomesetup {
                     source sourceSets.main
                 }
             }
@@ -118,7 +118,8 @@ jar {
             "Specification-Title": "tomesetup",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
-            "Implementation-Version": "${version}"
+            "Implementation-Version": "${project.version}",
+            "Implementation-Vendor": "ToMe25"
         ])
     }
 }

@@ -1,0 +1,1 @@
+This directory is needed for forge to load the en_us.json file on servers.

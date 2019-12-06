@@ -3,7 +3,7 @@ loaderVersion="[26,)" #mandatory
 issueTrackerURL="https://github.com/ToMe25/ToMeSetup/issues"
 [[mods]] #mandatory
     modId="tomesetup" #mandatory
-    version="${version}" #mandatory file.jarVersion
+    version="${file.jarVersion}" #mandatory
     displayName="ToMe Setup" #mandatory
     displayURL="https://www.curseforge.com/minecraft/mc-mods/tomesetup"
     logoFile="ToMeSetupLogo.png"
