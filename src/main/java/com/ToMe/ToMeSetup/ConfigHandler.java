@@ -2,12 +2,12 @@ package com.ToMe.ToMeSetup;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 import com.ToMe.ToMeSetup.api.Messager;
 import com.ToMe.ToMeSetup.api.StartItems.impl.StartItemContainer;
@@ -25,6 +25,9 @@ import net.minecraft.world.GameRules;
 //import net.minecraft.world.GameRules.ValueType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 //import net.minecraftforge.common.ForgeConfigSpec;
@@ -38,7 +41,8 @@ public class ConfigHandler {
 	
 	//public Configuration config;
 	public CommentedFileConfig config;
-	//private static final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+	private static final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+	private Map<String, ConfigValue<?>> values = new HashMap<String, ConfigValue<?>>();
 	//GENERAL
 	public static final String CATEGORY_GENERAL = "general";
 	public static boolean enableTooltips;
@@ -46,7 +50,7 @@ public class ConfigHandler {
 	//GAMERULES
 	public static final String CATEGORY_GAMERULES = "gamerules";
 	public static boolean enableGamerules = true;
-	private static boolean initGamerules = false;
+	//private static boolean initGamerules = false;
 	public static final Map<String, Object> customDefaultValues;
 	public static Map<String, Object> configValues = new HashMap<String, Object>();
 	public static boolean pvp = true;
@@ -115,10 +119,16 @@ public class ConfigHandler {
 		//config = CommentedFileConfig.builder(new File(FMLPaths.CONFIGDIR.get().toFile(), "ToMeSetup.cfg")).sync().autosave().build();
 		config = CommentedFileConfig.builder(new File(FMLPaths.CONFIGDIR.get().toFile(), "ToMeSetup.toml")).sync().autosave().build();
 		//config = CommentedFileConfig.builder(new File(FMLPaths.CONFIGDIR.get().toFile(), "ToMeSetup.cfg"), FormatDetector.detectByName("json.json")).sync().autosave().build();
-		ForgeConfigSpec spec = new ForgeConfigSpec.Builder().build();
+		config.load();
+		InitConfig();
+		//ForgeConfigSpec spec = new ForgeConfigSpec.Builder().build();
+		ForgeConfigSpec spec = builder.build();
 		//ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spec, "/ToMeSetup.toml");
 		//ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spec);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spec, config.getFile().getName());
+		spec.setConfig(config);
+		loadConfig();
+		useConfig();
 		//try {
 			//config.load();
             //InitConfig(config);
@@ -133,42 +143,50 @@ public class ConfigHandler {
 		//InitConfig(config);
 	}
 	
-	public void load() {
-		try {
-            config.load();
-            InitConfig(config);
-        } catch (Exception e1) {
-        	e1.printStackTrace();
-        } finally {
-        	useConfig();
-        }
-	}
+	//public void load() {
+		//try {
+			//config.load();
+			//InitConfig(config);
+		//} catch (Exception e1) {
+			//e1.printStackTrace();
+		//} finally {
+			//useConfig();
+		//}
+	//}
 	
 	//public static void InitConfig(Configuration cfg) {
 	//private static void InitConfig(Configuration cfg) {
-	private static void InitConfig(CommentedFileConfig cfg) {
+	//private static void InitConfig(CommentedFileConfig cfg) {
+	private void InitConfig() {
 		//ConfigCategory gamerules = new ConfigCategory("gamerules");
 		//cfg.addCustomCategoryComment("gamerules", "Test");
 		
 		//GENERAL
 		//cfg.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "The General Configs.");
-		cfg.setComment(CATEGORY_GENERAL, "The General Configs.");
+		//cfg.setComment(CATEGORY_GENERAL, "The General Configs.");
+		builder.comment("The General Configs.").push(CATEGORY_GENERAL).pop();
 		//enableTooltips = cfg.getBoolean("enableErrorTooltips", Configuration.CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
-		enableTooltips = ToMeSetupMod.cfg.getBoolean("enableErrorTooltips", CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
+		//enableTooltips = ToMeSetupMod.cfg.getBoolean("enableErrorTooltips", CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
+		getBoolean("enableErrorTooltips", CATEGORY_GENERAL, true, "Enables/Disables the Chat Tooltips(Server Side only).");
 		//explosionBlockDamage = cfg.getBoolean("explosionBlockDamage", Configuration.CATEGORY_GENERAL, explosionBlockDamage, "Whether this Mod should add the explosionBlockDamage Gamerule");
-		explosionBlockDamage = ToMeSetupMod.cfg.getBoolean("explosionBlockDamage", CATEGORY_GENERAL, explosionBlockDamage, "Whether this Mod should add the explosionBlockDamage Gamerule");
+		//explosionBlockDamage = ToMeSetupMod.cfg.getBoolean("explosionBlockDamage", CATEGORY_GENERAL, explosionBlockDamage, "Whether this Mod should add the explosionBlockDamage Gamerule");
+		getBoolean("explosionBlockDamage", CATEGORY_GENERAL, explosionBlockDamage, "Whether this Mod should add the explosionBlockDamage Gamerule");
 		
 		//GAMERULES
 		//if(!cfg.hasCategory(CATEGORY_GAMERULES)) {
-		if(!cfg.contains(CATEGORY_GAMERULES)) {
-			initGamerules = true;
-		}
+		//if(!cfg.contains(CATEGORY_GAMERULES)) {
+		//if(!config.contains(CATEGORY_GAMERULES)) {
+			//initGamerules = true;
+		//}
 		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
-		cfg.setComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
+		//cfg.setComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
+		builder.comment("How this gamerules should set on World load.").push(CATEGORY_GAMERULES).pop();
 		//enableGamerules = cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
-		enableGamerules = ToMeSetupMod.cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
+		//enableGamerules = ToMeSetupMod.cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
+		getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
 		//pvp = cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
-		pvp = ToMeSetupMod.cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
+		//pvp = ToMeSetupMod.cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
+		getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
 		//for(String rule:customDefaultValues.keySet()) {
 			//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
 			//if(customDefaultValues.get(rule) instanceof Boolean) {
@@ -181,23 +199,28 @@ public class ConfigHandler {
 				//cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
 			//}
 		//}
-		if(initGamerules) {
-			for(String rule:customDefaultValues.keySet()) {
+		//if(initGamerules) {
+			//for(String rule:customDefaultValues.keySet()) {
 				//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-				if(customDefaultValues.get(rule) instanceof Boolean) {
+				//if(customDefaultValues.get(rule) instanceof Boolean) {
 					//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-					ToMeSetupMod.cfg.getBoolean(rule, CATEGORY_GAMERULES, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-				}
-				else if(customDefaultValues.get(rule) instanceof Integer) {
+					//ToMeSetupMod.cfg.getBoolean(rule, CATEGORY_GAMERULES, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+					//getBoolean(rule, CATEGORY_GAMERULES, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				//}
+				//else if(customDefaultValues.get(rule) instanceof Integer) {
 					//cfg.get(CATEGORY_GAMERULES, rule, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-					ToMeSetupMod.cfg.getInt(rule, CATEGORY_GAMERULES, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-				}
-				else if(customDefaultValues.get(rule) instanceof String) {
+					//ToMeSetupMod.cfg.getInt(rule, CATEGORY_GAMERULES, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+					//getInt(rule, CATEGORY_GAMERULES, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				//}
+				//else if(customDefaultValues.get(rule) instanceof String) {
 					//cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-					ToMeSetupMod.cfg.getString(rule, CATEGORY_GAMERULES, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
-				}
-			}
-		}
+					//ToMeSetupMod.cfg.getString(rule, CATEGORY_GAMERULES, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+					//getString(rule, CATEGORY_GAMERULES, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				//}
+			//}
+			//initGamerulesConfig(config);
+		//}
+		initGamerulesConfig(config);
 		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
 		//keepInventory = cfg.getBoolean("keepInventory", CATEGORY_GAMERULES, true, "The gamerule keepInventory determines whether the Pleyer keeps his Items on death in Inventory. To set this manually do \"/gamerule keepInventory true\"!");
 		//mobGriefing = cfg.getBoolean("mobGriefing", CATEGORY_GAMERULES, false, "The gamerule mobGriefing determines whether Mobs con break Blocks or pickup Items. To set this manually do \"/gamerule mobGriefing false\"!");
@@ -210,45 +233,61 @@ public class ConfigHandler {
 		
 		//WORLDSPAWN
 		//cfg.addCustomCategoryComment(CATEGORY_WORLDSPAWN, "What to do with the Worldspawn.");
-		cfg.setComment(CATEGORY_WORLDSPAWN, "What to do with the Worldspawn.");
+		//cfg.setComment(CATEGORY_WORLDSPAWN, "What to do with the Worldspawn.");
+		builder.comment("What to do with the Worldspawn.").push(CATEGORY_WORLDSPAWN).pop();
 		//setWorldspawn = cfg.getBoolean("setWorldSpawn", CATEGORY_WORLDSPAWN, true, "Enables / Disables this Category! If enabled it will set the Worldspawn to X:worldSpawnX, Z:worldSpawnZ, Y:1 Block over the Highest non air Block.");
-		setWorldspawn = ToMeSetupMod.cfg.getBoolean("setWorldSpawn", CATEGORY_WORLDSPAWN, true, "Enables / Disables this Category! If enabled it will set the Worldspawn to X:worldSpawnX, Z:worldSpawnZ, Y:1 Block over the Highest non air Block.");
+		//setWorldspawn = ToMeSetupMod.cfg.getBoolean("setWorldSpawn", CATEGORY_WORLDSPAWN, true, "Enables / Disables this Category! If enabled it will set the Worldspawn to X:worldSpawnX, Z:worldSpawnZ, Y:1 Block over the Highest non air Block.");
+		getBoolean("setWorldSpawn", CATEGORY_WORLDSPAWN, true, "Enables / Disables this Category! If enabled it will set the Worldspawn to X:worldSpawnX, Z:worldSpawnZ, Y:1 Block over the Highest non air Block.");
 		//worldSpawnX = cfg.getInt("worldSpawnX", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The X psoition of the Worldspawn.");
-		worldSpawnX = ToMeSetupMod.cfg.getInt("worldSpawnX", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The X psoition of the Worldspawn.");
+		//worldSpawnX = ToMeSetupMod.cfg.getInt("worldSpawnX", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The X psoition of the Worldspawn.");
+		getInt("worldSpawnX", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The X psoition of the Worldspawn.");
 		//worldSpawnZ = cfg.getInt("worldSpawnZ", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The Z psoition of the Worldspawn.");
-		worldSpawnZ = ToMeSetupMod.cfg.getInt("worldSpawnZ", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The Z psoition of the Worldspawn.");
+		//worldSpawnZ = ToMeSetupMod.cfg.getInt("worldSpawnZ", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The Z psoition of the Worldspawn.");
+		getInt("worldSpawnZ", CATEGORY_WORLDSPAWN, 0, -30000000, 30000000, "The Z psoition of the Worldspawn.");
 		//setBedrock = cfg.getBoolean("setBedrock", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with Bedrock.");
 		//setBedrock = cfg.getBoolean("setGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by groundBlock.");
 		//setBedrock = cfg.getBoolean("replaceGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by ground2Replace.");
-		setBedrock = ToMeSetupMod.cfg.getBoolean("replaceGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by ground2Replace.");
+		//setBedrock = ToMeSetupMod.cfg.getBoolean("replaceGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by ground2Replace.");
+		getBoolean("replaceGround", CATEGORY_WORLDSPAWN, true, "Replace the block at X:worldSpawnX, Z:worldSpawnZ, Y:0 with the Block defined by ground2Replace.");
 		//replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with Grass if it is a Liquid Block.");
 		//replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with the Block defined by liquidReplace if it is a Liquid Block.");
 		//replaceLiquid = cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by liquid2Replace if it is a Liquid Block.");
-		replaceLiquid = ToMeSetupMod.cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by liquid2Replace if it is a Liquid Block.");
+		//replaceLiquid = ToMeSetupMod.cfg.getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by liquid2Replace if it is a Liquid Block.");
+		getBoolean("replaceLiquid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by liquid2Replace if it is a Liquid Block.");
 		//replaceSolid = cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block under the Worldspawn with the Block defined by solidReplace if it is not a Liquid Block.");
 		//replaceSolid = cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by solid2Replace if it is not a Liquid Block.");
-		replaceSolid = ToMeSetupMod.cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by solid2Replace if it is not a Liquid Block.");
+		//replaceSolid = ToMeSetupMod.cfg.getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by solid2Replace if it is not a Liquid Block.");
+		getBoolean("replaceSolid", CATEGORY_WORLDSPAWN, true, "Replace the block direct under the Worldspawn with the Block defined by solid2Replace if it is not a Liquid Block.");
 		//groundBlock = cfg.getString("groundBlock", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 with this Block.");
 		//liquidReplace = cfg.getString("liquidReplace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to set by replaceLiquid.");
 		//solidReplace = cfg.getString("solidReplace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to set by replaceSolid.");
 		//groundEnableOreDict = cfg.getBoolean("ground1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Dissable to Use the Registry Name.");
-		groundEnableOreDict = ToMeSetupMod.cfg.getBoolean("ground1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Dissable to Use the Registry Name.");
+		//groundEnableOreDict = ToMeSetupMod.cfg.getBoolean("ground1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Dissable to Use the Registry Name.");
+		getBoolean("ground1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Dissable to Use the Registry Name.");
 		//liquidEnableOreDict = cfg.getBoolean("liquid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a Liquid Block. Dissable to Use the Registry Name.");
-		liquidEnableOreDict = ToMeSetupMod.cfg.getBoolean("liquid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a Liquid Block. Dissable to Use the Registry Name.");
+		//liquidEnableOreDict = ToMeSetupMod.cfg.getBoolean("liquid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a Liquid Block. Dissable to Use the Registry Name.");
+		getBoolean("liquid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a Liquid Block. Dissable to Use the Registry Name.");
 		//solidEnableOreDict = cfg.getBoolean("solid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a not Liquid Block. Dissable to Use the Registry Name.");
-		solidEnableOreDict = ToMeSetupMod.cfg.getBoolean("solid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a not Liquid Block. Dissable to Use the Registry Name.");
+		//solidEnableOreDict = ToMeSetupMod.cfg.getBoolean("solid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a not Liquid Block. Dissable to Use the Registry Name.");
+		getBoolean("solid1EnableOreDict", CATEGORY_WORLDSPAWN, false, "Enable to use the OreDictionary to get the Block to set direct under the Worldspawn if it is a not Liquid Block. Dissable to Use the Registry Name.");
 		//groundBlock = cfg.getString("ground2Replace", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is dissabled.");
-		groundBlock = ToMeSetupMod.cfg.getString("ground2Replace", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is dissabled.");
+		//groundBlock = ToMeSetupMod.cfg.getString("ground2Replace", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is dissabled.");
+		getString("ground2Replace", CATEGORY_WORLDSPAWN, "minecraft:bedrock", "The Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is dissabled.");
 		//liquidReplace = cfg.getString("liquid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is dissabled.");
-		liquidReplace = ToMeSetupMod.cfg.getString("liquid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass_block", "The Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is dissabled.");
+		//liquidReplace = ToMeSetupMod.cfg.getString("liquid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass_block", "The Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is dissabled.");
+		getString("liquid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass_block", "The Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is dissabled.");
 		//solidReplace = cfg.getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass", "The Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is dissabled.");
-		solidReplace = ToMeSetupMod.cfg.getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass_block", "The Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is dissabled.");
+		//solidReplace = ToMeSetupMod.cfg.getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass_block", "The Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is dissabled.");
+		getString("solid2Replace", CATEGORY_WORLDSPAWN, "minecraft:grass_block", "The Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is dissabled.");
 		//groundOreDict = cfg.getString("ground3OreDict", CATEGORY_WORLDSPAWN, "bedrock", "The OreDictinary Name with the Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is enabled.");
-		groundOreDict = ToMeSetupMod.cfg.getString("ground3OreDict", CATEGORY_WORLDSPAWN, "bedrock", "The OreDictinary Name with the Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		//groundOreDict = ToMeSetupMod.cfg.getString("ground3OreDict", CATEGORY_WORLDSPAWN, "bedrock", "The OreDictinary Name with the Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		getString("ground3OreDict", CATEGORY_WORLDSPAWN, "bedrock", "The OreDictinary Name with the Block to Set at Position X:worldSpawnX, Z:worldSpawnZ, Y:0 if ground1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
 		//liquidOreDict = cfg.getString("liquid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is enabled.");
-		liquidOreDict = ToMeSetupMod.cfg.getString("liquid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		//liquidOreDict = ToMeSetupMod.cfg.getString("liquid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		getString("liquid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is a Liquid Block and liquid1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
 		//solidOreDict = cfg.getString("solid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is enabled.");
-		solidOreDict = ToMeSetupMod.cfg.getString("solid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		//solidOreDict = ToMeSetupMod.cfg.getString("solid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		getString("solid3OreDict", CATEGORY_WORLDSPAWN, "grass", "The OreDictinary Name with the Block to Set direct under the Worldspawn if it is not a Liquid Block and solid1EnableOreDict is enabled. (This should be compatible with all tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
 		//groundMeta = cfg.getInt("ground4Meta", CATEGORY_WORLDSPAWN, -1, -1, 255, "The Meatdata for the Block to set at X:worldSpawnX, Z:worldSpawnZ, Y:0. Use -1 for the Default Metadata.");
 		//liquidMeta = cfg.getInt("liquid4Meta", CATEGORY_WORLDSPAWN, -1, -1, 255, "The Meatdata for the Block to set direct under the Worldspawn if it is a Liquid Block. Use -1 for the Default Metadata.");
 		//solidMeta = cfg.getInt("solid4Meta", CATEGORY_WORLDSPAWN, -1, -1, 255, "The Meatdata for the Block to set direct under the Worldspawn if it is not a Liquid Block. Use -1 for the Default Metadata.");
@@ -261,26 +300,67 @@ public class ConfigHandler {
 		
 		//SPAWN ITEMS
 		//cfg.addCustomCategoryComment(CATEGORY_SPAWN_ITEMS, "Wich Start Items Players should get.");
-		cfg.setComment(CATEGORY_SPAWN_ITEMS, "Wich Start Items Players should get.");
+		//cfg.setComment(CATEGORY_SPAWN_ITEMS, "Wich Start Items Players should get.");
+		builder.comment("Wich Start Items Players should get.").push(CATEGORY_SPAWN_ITEMS).pop();
 		//enableStartItems = cfg.getBoolean("enableStartItems", CATEGORY_SPAWN_ITEMS, true, "Enables/Dissables this Category.");
-		enableStartItems = ToMeSetupMod.cfg.getBoolean("enableStartItems", CATEGORY_SPAWN_ITEMS, true, "Enables/Dissables this Category.");
+		//enableStartItems = ToMeSetupMod.cfg.getBoolean("enableStartItems", CATEGORY_SPAWN_ITEMS, true, "Enables/Dissables this Category.");
+		getBoolean("enableStartItems", CATEGORY_SPAWN_ITEMS, true, "Enables/Dissables this Category.");
 		//startItemsOnRespawn = cfg.getBoolean("RespawnStartItems", CATEGORY_SPAWN_ITEMS, false, "Should the Playerget the Items everytime after respawning?");
-		startItemsOnRespawn = ToMeSetupMod.cfg.getBoolean("RespawnStartItems", CATEGORY_SPAWN_ITEMS, false, "Should the Playerget the Items everytime after respawning?");
+		//startItemsOnRespawn = ToMeSetupMod.cfg.getBoolean("RespawnStartItems", CATEGORY_SPAWN_ITEMS, false, "Should the Playerget the Items everytime after respawning?");
+		getBoolean("RespawnStartItems", CATEGORY_SPAWN_ITEMS, false, "Should the Playerget the Items everytime after respawning?");
 		//StartItems = cfg.getStringList("Start1Items", CATEGORY_SPAWN_ITEMS, StartItems, "Determine Wich Start Items all Players should get.");
-		StartItems = ToMeSetupMod.cfg.getStringList("Start1Items", CATEGORY_SPAWN_ITEMS, StartItems, "Determine Wich Start Items all Players should get.");
+		//StartItems = ToMeSetupMod.cfg.getStringList("Start1Items", CATEGORY_SPAWN_ITEMS, StartItems, "Determine Wich Start Items all Players should get.");
+		getStringList("Start1Items", CATEGORY_SPAWN_ITEMS, StartItems, "Determine Wich Start Items all Players should get.");
 		//StartItemMeta = cfg.getStringList("Start2Metas", CATEGORY_SPAWN_ITEMS, StartItemMeta, "The Item Meta for the direct defined Items. Write in the same sequence like the Start1Items.");
-		StartItemMeta = ToMeSetupMod.cfg.getStringList("Start2Metas", CATEGORY_SPAWN_ITEMS, StartItemMeta, "The Item Meta for the direct defined Items. Write in the same sequence like the Start1Items. (This is the only not removed meta configuration option and only affects tool damage as there is no longer metadata in 1.13+.)");
+		//StartItemMeta = ToMeSetupMod.cfg.getStringList("Start2Metas", CATEGORY_SPAWN_ITEMS, StartItemMeta, "The Item Meta for the direct defined Items. Write in the same sequence like the Start1Items. (This is the only not removed meta configuration option and only affects tool damage as there is no longer metadata in 1.13+.)");
+		getStringList("Start2Metas", CATEGORY_SPAWN_ITEMS, StartItemMeta, "The Item Meta for the direct defined Items. Write in the same sequence like the Start1Items. (This is the only not removed meta configuration option and only affects tool damage as there is no longer metadata in 1.13+.)");
 		//StartItemCount = cfg.getStringList("Start3Count", CATEGORY_SPAWN_ITEMS, StartItemCount, "How many from this Items should the Player get? Write in the same sequence like the Start1Items.");
-		StartItemCount = ToMeSetupMod.cfg.getStringList("Start3Count", CATEGORY_SPAWN_ITEMS, StartItemCount, "How many from this Items should the Player get? Write in the same sequence like the Start1Items.");
+		//StartItemCount = ToMeSetupMod.cfg.getStringList("Start3Count", CATEGORY_SPAWN_ITEMS, StartItemCount, "How many from this Items should the Player get? Write in the same sequence like the Start1Items.");
+		getStringList("Start3Count", CATEGORY_SPAWN_ITEMS, StartItemCount, "How many from this Items should the Player get? Write in the same sequence like the Start1Items.");
 		//StartItemOreDicts = cfg.getStringList("Start4OreDicts", CATEGORY_SPAWN_ITEMS, StartItemOreDicts, "Determine Wich Start Items all Players should get. Use OreDictionary.");
-		StartItemOreDicts = ToMeSetupMod.cfg.getStringList("Start4OreDicts", CATEGORY_SPAWN_ITEMS, StartItemOreDicts, "Determine Wich Start Items all Players should get. Use OreDictionary. (This should be compatible with all item tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		//StartItemOreDicts = ToMeSetupMod.cfg.getStringList("Start4OreDicts", CATEGORY_SPAWN_ITEMS, StartItemOreDicts, "Determine Wich Start Items all Players should get. Use OreDictionary. (This should be compatible with all item tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
+		getStringList("Start4OreDicts", CATEGORY_SPAWN_ITEMS, StartItemOreDicts, "Determine Wich Start Items all Players should get. Use OreDictionary. (This should be compatible with all item tag names and most oredictionary names, however the meta configuration option got removed because there is no metadata in 1.13+ and the number configuration option got removed because tag sorting is inconsistent.)");
 		//StartItemOreDictNumber = cfg.getStringList("Start5OreNumbers", CATEGORY_SPAWN_ITEMS, StartItemOreDictNumber, "How many Items are before this Item in the same OreDictionary Name? Write in the same sequence like the Start4OreDicts.");
 		//StartItemOreDictNumber = ToMeSetupMod.cfg.getStringList("Start5OreNumbers", CATEGORY_SPAWN_ITEMS, StartItemOreDictNumber, "How many Items are before this Item in the same OreDictionary Name? Write in the same sequence like the Start4OreDicts.");
 		//StartItemOreDictMeta = cfg.getStringList("Start6OreMetas", CATEGORY_SPAWN_ITEMS, StartItemOreDictMeta, "The Item Meta for the Items defined via OreDict. Write in the same sequence like the Start4OreDicts.");
 		//StartItemOreDictMeta = ToMeSetupMod.cfg.getStringList("Start6OreMetas", CATEGORY_SPAWN_ITEMS, StartItemOreDictMeta, "The Item Meta for the Items defined via OreDict. Write in the same sequence like the Start4OreDicts.");
 		//StartItemOreDictCount = cfg.getStringList("Start7OreCount", CATEGORY_SPAWN_ITEMS, StartItemOreDictCount, "How many from this Items should the Player get? Write in the same sequence like the Start4OreDicts.");
-		StartItemOreDictCount = ToMeSetupMod.cfg.getStringList("Start5OreCount", CATEGORY_SPAWN_ITEMS, StartItemOreDictCount, "How many from this Items should the Player get? Write in the same sequence like the Start4OreDicts.");
+		//StartItemOreDictCount = ToMeSetupMod.cfg.getStringList("Start5OreCount", CATEGORY_SPAWN_ITEMS, StartItemOreDictCount, "How many from this Items should the Player get? Write in the same sequence like the Start4OreDicts.");
+		getStringList("Start5OreCount", CATEGORY_SPAWN_ITEMS, StartItemOreDictCount, "How many from this Items should the Player get? Write in the same sequence like the Start4OreDicts.");
 		//System.out.println("Config Created!");
+	}
+	
+	private void loadConfig() {
+		//GENERAL
+		enableTooltips = getBooleanValue("enableErrorTooltips", CATEGORY_GENERAL);
+		explosionBlockDamage = getBooleanValue("explosionBlockDamage", CATEGORY_GENERAL);
+		//GAMERULES
+		enableGamerules = getBooleanValue("enableGamerules", CATEGORY_GAMERULES);
+		pvp = getBooleanValue("pvp", CATEGORY_GAMERULES);
+		//WORLDSPAWN
+		setWorldspawn = getBooleanValue("setWorldSpawn", CATEGORY_WORLDSPAWN);
+		worldSpawnX = getIntValue("worldSpawnX", CATEGORY_WORLDSPAWN);
+		worldSpawnZ = getIntValue("worldSpawnZ", CATEGORY_WORLDSPAWN);
+		setBedrock = getBooleanValue("replaceGround", CATEGORY_WORLDSPAWN);
+		replaceLiquid = getBooleanValue("replaceLiquid", CATEGORY_WORLDSPAWN);
+		replaceSolid = getBooleanValue("replaceSolid", CATEGORY_WORLDSPAWN);
+		groundEnableOreDict = getBooleanValue("ground1EnableOreDict", CATEGORY_WORLDSPAWN);
+		liquidEnableOreDict = getBooleanValue("liquid1EnableOreDict", CATEGORY_WORLDSPAWN);
+		solidEnableOreDict = getBooleanValue("solid1EnableOreDict", CATEGORY_WORLDSPAWN);
+		groundBlock = getStringValue("ground2Replace", CATEGORY_WORLDSPAWN);
+		liquidReplace = getStringValue("liquid2Replace", CATEGORY_WORLDSPAWN);
+		solidReplace = getStringValue("solid2Replace", CATEGORY_WORLDSPAWN);
+		groundOreDict = getStringValue("ground3OreDict", CATEGORY_WORLDSPAWN);
+		liquidOreDict = getStringValue("liquid3OreDict", CATEGORY_WORLDSPAWN);
+		solidOreDict = getStringValue("solid3OreDict", CATEGORY_WORLDSPAWN);
+		//SPAWN ITEMS
+		enableStartItems = getBooleanValue("enableStartItems", CATEGORY_SPAWN_ITEMS);
+		startItemsOnRespawn = getBooleanValue("RespawnStartItems", CATEGORY_SPAWN_ITEMS);
+		StartItems = getStringArrayValue("Start1Items", CATEGORY_SPAWN_ITEMS);
+		StartItemMeta = getStringArrayValue("Start2Metas", CATEGORY_SPAWN_ITEMS);
+		StartItemCount = getStringArrayValue("Start3Count", CATEGORY_SPAWN_ITEMS);
+		StartItemOreDicts = getStringArrayValue("Start4OreDicts", CATEGORY_SPAWN_ITEMS);
+		StartItemOreDictCount = getStringArrayValue("Start5OreCount", CATEGORY_SPAWN_ITEMS);
 		
 		StartItemMetas = new int[StartItemMeta.length];
 		int i = 0;
@@ -367,15 +447,15 @@ public class ConfigHandler {
 	
 	public void onWorldLoad(World world) {
 		//if(!config.hasCategory(CATEGORY_GAMERULES)) {
-		if(initGamerules) {
-			try {
-	            initGamerulesConfig(config, world);
-	        } finally {
+		//if(initGamerules) {
+			//try {
+	            //initGamerulesConfig(config, world);
+	        //} finally {
 	        	//if (config.hasChanged()) {
 	        		//config.save();
 	            //}
-	        }
-		}
+	        //}
+		//}
 		readGamerulesConfig(config);
 	}
 	
@@ -409,7 +489,8 @@ public class ConfigHandler {
 	
 	//private void initGamerulesConfig(Configuration cfg, World w) {
 	@SuppressWarnings("unchecked")
-	private void initGamerulesConfig(CommentedFileConfig cfg, World w) {
+	//private void initGamerulesConfig(CommentedFileConfig cfg, World w) {
+	private void initGamerulesConfig(CommentedFileConfig cfg) {
 		//cfg.addCustomCategoryComment(CATEGORY_GAMERULES, "How this gamerules should set on World load.");
 		//enableGamerules = cfg.getBoolean("enableGamerules", CATEGORY_GAMERULES, enableGamerules, "Should this Mod set some Gamerules on world load?");
 		//pvp = cfg.getBoolean("pvp", CATEGORY_GAMERULES, pvp, "Determines wheter pvp should be enabled or not(this isn't realy a Gamerule, but it fits ito that Category).");
@@ -466,6 +547,25 @@ public class ConfigHandler {
 				//ToMeSetupMod.cfg.getString(rule.toString(), CATEGORY_GAMERULES, (String) value, "How should the Gamerule " + rule + " be set?");
 			//}
 		//}
+		for(String rule:customDefaultValues.keySet()) {
+			//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			if(customDefaultValues.get(rule) instanceof Boolean) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				//ToMeSetupMod.cfg.getBoolean(rule, CATEGORY_GAMERULES, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				getBoolean(rule, CATEGORY_GAMERULES, (Boolean) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			}
+			else if(customDefaultValues.get(rule) instanceof Integer) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				//ToMeSetupMod.cfg.getInt(rule, CATEGORY_GAMERULES, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				getInt(rule, CATEGORY_GAMERULES, (Integer) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			}
+			else if(customDefaultValues.get(rule) instanceof String) {
+				//cfg.get(CATEGORY_GAMERULES, rule, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				//ToMeSetupMod.cfg.getString(rule, CATEGORY_GAMERULES, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+				getString(rule, CATEGORY_GAMERULES, (String) customDefaultValues.get(rule), "How should the Gamerule " + rule + " set?");
+			}
+		}
+		GameRules gameRules = new GameRules();
 		try {
 			for(Object rule:GameRules.GAME_RULES.keySet()) {
 				Class<?> RuleKey = Class.forName("net.minecraft.world.GameRules$RuleKey");
@@ -475,7 +575,8 @@ public class ConfigHandler {
 				} catch (Exception e) {
 					get = GameRules.class.getDeclaredMethod("get", RuleKey);
 				}
-				Object val = get.invoke(w.getGameRules(), rule);
+				//Object val = get.invoke(w.getGameRules(), rule);
+				Object val = get.invoke(gameRules, rule);
 				Class<?> BooleanValue = Class.forName("net.minecraft.world.GameRules$BooleanValue");
 				Class<?> IntegerValue = Class.forName("net.minecraft.world.GameRules$IntegerValue");
 				if(BooleanValue.isInstance(val)) {
@@ -490,7 +591,8 @@ public class ConfigHandler {
 					if(customDefaultValues.containsKey(rule.toString()) && customDefaultValues.get(rule.toString()) instanceof Boolean) {
 						value = (Boolean) customDefaultValues.get(rule.toString());
 					}
-					ToMeSetupMod.cfg.getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
+					//ToMeSetupMod.cfg.getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
+					getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
 				}
 				else if(IntegerValue.isInstance(val)) {
 					//Method get = null;
@@ -504,7 +606,8 @@ public class ConfigHandler {
 					if(customDefaultValues.containsKey(rule.toString()) && customDefaultValues.get(rule.toString()) instanceof Integer) {
 						value = (Integer) customDefaultValues.get(rule.toString());
 					}
-					ToMeSetupMod.cfg.getInt(rule.toString(), CATEGORY_GAMERULES, (int) value, "How should the Gamerule " + rule + " be set?");
+					//ToMeSetupMod.cfg.getInt(rule.toString(), CATEGORY_GAMERULES, (int) value, "How should the Gamerule " + rule + " be set?");
+					getInt(rule.toString(), CATEGORY_GAMERULES, (int) value, "How should the Gamerule " + rule + " be set?");
 				}
 			}
 		} catch (Throwable e) {
@@ -515,7 +618,8 @@ public class ConfigHandler {
 				} catch (Exception e2) {
 					getDefinitions = GameRules.class.getDeclaredMethod("getDefinitions");
 				}
-				for(String rule:((Map<String, ?>)getDefinitions.invoke(w.getGameRules())).keySet()) {
+				//for(String rule:((Map<String, ?>)getDefinitions.invoke(w.getGameRules())).keySet()) {
+				for(String rule:((Map<String, ?>)getDefinitions.invoke(gameRules)).keySet()) {
 					Class<?> Value = Class.forName("net.minecraft.world.GameRules$Value");
 					Method getType = null;
 					try {
@@ -531,31 +635,37 @@ public class ConfigHandler {
 					}
 					Class<?> ValueType = Class.forName("net.minecraft.world.GameRules$ValueType");
 					Method valueOf = ValueType.getMethod("valueOf", String.class);
-					if(getType.invoke(get.invoke(w.getGameRules(), rule)) == valueOf.invoke(null, "BOOLEAN_VALUE")) {
+					//if(getType.invoke(get.invoke(w.getGameRules(), rule)) == valueOf.invoke(null, "BOOLEAN_VALUE")) {
+					if(getType.invoke(get.invoke(gameRules, rule)) == valueOf.invoke(null, "BOOLEAN_VALUE")) {
 						Method getBoolean = null;
 						try {
 							getBoolean = GameRules.class.getDeclaredMethod("func_82766_b", String.class);
 						} catch (Exception e2) {
 							getBoolean = GameRules.class.getDeclaredMethod("getBoolean", String.class);
 						}
-						boolean value = (boolean) getBoolean.invoke(w.getGameRules(), rule);
+						//boolean value = (boolean) getBoolean.invoke(w.getGameRules(), rule);
+						boolean value = (boolean) getBoolean.invoke(gameRules, rule);
 						if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Boolean) {
 							value = (Boolean) customDefaultValues.get(rule);
 						}
-						ToMeSetupMod.cfg.getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
+						//ToMeSetupMod.cfg.getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
+						getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
 					}
-					else if(getType.invoke(get.invoke(w.getGameRules(), rule)) == valueOf.invoke(null, "NUMERICAL_VALUE")) {
+					//else if(getType.invoke(get.invoke(w.getGameRules(), rule)) == valueOf.invoke(null, "NUMERICAL_VALUE")) {
+					else if(getType.invoke(get.invoke(gameRules, rule)) == valueOf.invoke(null, "NUMERICAL_VALUE")) {
 						Method getBoolean = null;
 						try {
 							getBoolean = GameRules.class.getDeclaredMethod("func_180263_c", String.class);
 						} catch (Exception e2) {
 							getBoolean = GameRules.class.getDeclaredMethod("getInt", String.class);
 						}
-						boolean value = (boolean) getBoolean.invoke(w.getGameRules(), rule);
-						if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Boolean) {
-							value = (Boolean) customDefaultValues.get(rule);
+						//int value = (int) getBoolean.invoke(w.getGameRules(), rule);
+						int value = (int) getBoolean.invoke(gameRules, rule);
+						if(customDefaultValues.containsKey(rule) && customDefaultValues.get(rule) instanceof Integer) {
+							value = (Integer) customDefaultValues.get(rule);
 						}
-						ToMeSetupMod.cfg.getBoolean(rule.toString(), CATEGORY_GAMERULES, (boolean) value, "How should the Gamerule " + rule + " be set?");
+						//ToMeSetupMod.cfg.getInt(rule.toString(), CATEGORY_GAMERULES, (int) value, "How should the Gamerule " + rule + " be set?");
+						getInt(rule.toString(), CATEGORY_GAMERULES, (int) value, "How should the Gamerule " + rule + " be set?");
 					}
 				}
 			} catch (Exception e2) {
@@ -563,7 +673,7 @@ public class ConfigHandler {
 				ToMeSetupMod.logger.catching(e2);
 			}
 		}
-		initGamerules = false;
+		//initGamerules = false;
 	}
 	
 	//private void readGamerulesConfig(Configuration cfg) {
@@ -603,64 +713,80 @@ public class ConfigHandler {
 		}
 	}
 	
-	public String getString(String name, String category, String defaultValue, String comment) {
+	//public String getString(String name, String category, String defaultValue, String comment) {
+	public void getString(String name, String category, String defaultValue, String comment) {
 		String path = category + "." + name;
-		if(!config.contains(path) || !(config.get(path) instanceof String)) {
-			config.set(path, defaultValue);
-		}
-		if(comment != null) {
-			config.setComment(path, comment + String.format(" [default: %s]", defaultValue));
-		}
-		return config.get(path);
+		ConfigValue<String> value = builder.comment(comment, "Default: " + defaultValue).define(path, defaultValue);
+		values.put(path, value);
+		//if(!config.contains(path) || !(config.get(path) instanceof String)) {
+			//config.set(path, defaultValue);
+		//}
+		//if(comment != null) {
+			//config.setComment(path, comment + String.format(" [default: %s]", defaultValue));
+		//}
+		//return config.get(path);
 	}
 	
-	public boolean getBoolean(String name, String category, boolean defaultValue, String comment) {
+	//public boolean getBoolean(String name, String category, boolean defaultValue, String comment) {
+	public void getBoolean(String name, String category, boolean defaultValue, String comment) {
 		String path = category + "." + name;
-		if(!config.contains(path) || !(config.get(path) instanceof Boolean)) {
-			config.set(path, defaultValue);
-		}
-		if(comment != null) {
-			config.setComment(path, comment + String.format(" [default: %b]", defaultValue));
-		}
-		return config.get(path);
+		BooleanValue value = builder.comment(comment, "Default: " + defaultValue).define(path, defaultValue);
+		values.put(path, value);
+		//if(!config.contains(path) || !(config.get(path) instanceof Boolean)) {
+			//config.set(path, defaultValue);
+		//}
+		//if(comment != null) {
+			//config.setComment(path, comment + String.format(" [default: %b]", defaultValue));
+		//}
+		//return config.get(path);
 	}
 	
-	public int getInt(String name, String category, int defaultValue, String comment) {
-		String path = category + "." + name;
-		if(!config.contains(path) || !(config.get(path) instanceof Integer)) {
-			config.set(path, defaultValue);
-		}
-		if(comment != null) {
-			config.setComment(path, comment + String.format(" [default: %d]", defaultValue));
-		}
-		return config.get(path);
+	//public int getInt(String name, String category, int defaultValue, String comment) {
+	public void getInt(String name, String category, int defaultValue, String comment) {
+		getInt(name, category, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE, comment);
+		//String path = category + "." + name;
+		//if(!config.contains(path) || !(config.get(path) instanceof Integer)) {
+			//config.set(path, defaultValue);
+		//}
+		//if(comment != null) {
+			//config.setComment(path, comment + String.format(" [default: %d]", defaultValue));
+		//}
+		//return config.get(path);
 	}
 	
-	public int getInt(String name, String category, int defaultValue, int min, int max, String comment) {
+	//public int getInt(String name, String category, int defaultValue, int min, int max, String comment) {
+	public void getInt(String name, String category, int defaultValue, int min, int max, String comment) {
 		String path = category + "." + name;
-		if(!config.contains(path) || !(config.get(path) instanceof Integer) || ((int)config.get(path)) < min || ((int)config.get(path)) > max) {
-			config.set(path, defaultValue);
-		}
-		if(comment != null) {
-			config.setComment(path, comment + String.format(" [range: %d ~ %d, default: %d]", min, max, defaultValue));
-		}
-		return config.get(path);
+		IntValue value = builder.comment(comment, "Default: " + defaultValue).defineInRange(path, defaultValue, min, max);
+		values.put(path, value);
+		//if(!config.contains(path) || !(config.get(path) instanceof Integer) || ((int)config.get(path)) < min || ((int)config.get(path)) > max) {
+			//config.set(path, defaultValue);
+		//}
+		//if(comment != null) {
+			//config.setComment(path, comment + String.format(" [range: %d ~ %d, default: %d]", min, max, defaultValue));
+		//}
+		//return config.get(path);
 	}
 	
-	public String[] getStringList(String name, String category, String[] defaultValue, String comment) {
-		return getStringList(name, category, Arrays.asList(defaultValue), comment).toArray(new String[0]);
+	//public String[] getStringList(String name, String category, String[] defaultValue, String comment) {
+	public void getStringList(String name, String category, String[] defaultValue, String comment) {
+		//return getStringList(name, category, Arrays.asList(defaultValue), comment).toArray(new String[0]);
+		getStringList(name, category, Arrays.asList(defaultValue), comment);
 	}
 	
-	public List<String> getStringList(String name, String category, List<String> defaultValue, String comment) {
+	//public List<String> getStringList(String name, String category, List<String> defaultValue, String comment) {
+	public void getStringList(String name, String category, List<String> defaultValue, String comment) {
 		String path = category + "." + name;
-		if(!config.contains(path) || !(config.get(path) instanceof List<?>)) {
-			config.set(path, defaultValue);
-		}
-		List<?> list = config.<List<?>>get(path);
-		if(comment != null) {
-			config.setComment(path, comment + String.format(" [default: %s]", transformList(defaultValue)));
-		}
-		return list.stream().map(Object::toString).collect(Collectors.toCollection(ArrayList::new));
+		ConfigValue<List<? extends String>> value = builder.comment(comment, "Default: " + transformList(defaultValue)).defineList(path, defaultValue, (o -> o instanceof String));
+		values.put(path, value);
+		//if(!config.contains(path) || !(config.get(path) instanceof List<?>)) {
+			//config.set(path, defaultValue);
+		//}
+		//List<?> list = config.<List<?>>get(path);
+		//if(comment != null) {
+			//config.setComment(path, comment + String.format(" [default: %s]", transformList(defaultValue)));
+		//}
+		//return list.stream().map(Object::toString).collect(Collectors.toCollection(ArrayList::new));
 	}
 	
 	private String transformList(List<String> strings) {
@@ -670,6 +796,55 @@ public class ConfigHandler {
 		}
 		string = string.substring(0, string.length() - 2) + "]";
 		return string;
+	}
+	
+	private String getStringValue(String name, String category) {
+		String path = category + "." + name;
+		if(values.containsKey(path)) {
+			Object value = values.get(path).get();
+			if(value instanceof String) {
+				return ((String) value);
+			}
+		}
+		return null;
+	}
+	
+	private boolean getBooleanValue(String name, String category) {
+		String path = category + "." + name;
+		if(values.containsKey(path)) {
+			ConfigValue<?> value = values.get(path);
+			if(value instanceof BooleanValue) {
+				return ((BooleanValue) value).get();
+			}
+		}
+		return false;
+	}
+	
+	private int getIntValue(String name, String category) {
+		String path = category + "." + name;
+		if(values.containsKey(path)) {
+			ConfigValue<?> value = values.get(path);
+			if(value instanceof IntValue) {
+				return ((IntValue) value).get();
+			}
+		}
+		return 0;
+	}
+	
+	private String[] getStringArrayValue(String name, String category) {
+		return getStringListValue(name, category).toArray(new String[0]);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<String> getStringListValue(String name, String category) {
+		String path = category + "." + name;
+		if(values.containsKey(path)) {
+			Object value = values.get(path).get();
+			if(value instanceof List) {
+				return ((List<String>) value);
+			}
+		}
+		return null;
 	}
 	
 }
