@@ -71,10 +71,10 @@ import net.minecraftforge.fml.common.Mod;
 //import net.minecraftforge.fml.common.eventhandler.EventPriority;
 //import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 //import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+//import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 //import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+//import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 //import net.minecraftforge.fml.packs.ResourcePackLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 //import net.minecraftforge.fml.relauncher.Side;
@@ -129,18 +129,21 @@ public class ToMeSetupMod {
 	
 	public ToMeSetupMod() {
 		MinecraftForge.EVENT_BUS.register(this);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+		//FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+		//FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::commonSetup);
 		initOreDictPrefixes();
+		commonSetup();
 	}
 	
 	//@SubscribeEvent
 	//@EventHandler
 	//public void preInit(FMLPreInitializationEvent e) {
-	public void commonSetup(FMLCommonSetupEvent e) {
+	//public void commonSetup(FMLCommonSetupEvent e) {
+	public void commonSetup() {
 		//logger = e.getModLog();
 		//cfg = new ConfigHandler(e);
 		cfg = new ConfigHandler();
-		cfg.load();
+		//cfg.load();
 		GameruleHandler.registerGamerules();
 		//SIP = new StartItemProvider();
 		//logger = e.getModLog();
